@@ -13,8 +13,8 @@ public class Network {
     /**
      * computerConnections represents list of all inter-computer edges
      * Each edge is an Integer[] of size 3
-     * edge[0] = source computer index
-     * edge[1] = destination computer index
+     * edge[0] = source computer index ( Not IP, it's the Index !)
+     * edge[1] = destination computer index ( Not IP, it's the Index !)
      * edge[2] = latency/edge weight
      */
     private LinkedList<Integer[]> computerConnections;
@@ -30,12 +30,12 @@ public class Network {
      */
     private LinkedList<LinkedList<Integer>> cluster;
     /**
-     * Adjacency List representing computer graph
+     * Adjacency List representing router graph
      */
     private LinkedList<LinkedList<Integer[]>> routerGraph;
 
-    int verticesComp; // Number of Computers
-    int verticesRouter; // Number of Routers
+    private int verticesComp; // Number of Computers
+    private int verticesRouter; // Number of Routers
 
     Scanner s; // Scanner to read Stdin input
 
@@ -159,7 +159,7 @@ public class Network {
          * using DFS and assign the IP address with the highest value within a cluster
          * as the IP address of the router
          *
-         * Eg: clustor => 3, 6, 23, 16
+         * Eg: cluster => 3, 6, 23, 16
          *  23 would be IP address of the router
          */
 
@@ -180,20 +180,27 @@ public class Network {
          * Also create Router to Index and Index to Router maps
          */
 
+        LinkedList<Integer> indexes = new LinkedList<>();
         for (int i = 0; i < cluster.size(); i++) {
 
             int index = routerIP(cluster.get(i));
             Router router = new Router(index);
+            indexes.add(index);
             IpToRouter.putIfAbsent(index,router);
-            routerToIndex.putIfAbsent(router, i);
-            indexToRouter.putIfAbsent(i, router);
-            //System.out.println("Router:"+router.getIPPrefix()); //DEBUG
 
             for (Integer c : cluster.get(i)) {
                 router.addComp(c);
-                //System.out.print(c + " ");
+                System.out.print(c + " ");
             }
-            //System.out.println();
+            System.out.println();
+        }
+
+        Collections.sort(indexes);
+
+        for(int i=0;i<indexes.size();i++){
+            Router router = IpToRouter.get(indexes.get(i));
+            routerToIndex.putIfAbsent(router, i);
+            indexToRouter.putIfAbsent(i, router);
         }
 
         verticesRouter = cluster.size();
@@ -209,7 +216,7 @@ public class Network {
      */
     public void connectCluster() {
 
-        //Initliaze Router Graph
+        //Initialize Router Graph
         for(int i=0;i<cluster.size();i++){
             routerGraph.add(new LinkedList<>());
         }

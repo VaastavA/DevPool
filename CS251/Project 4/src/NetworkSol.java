@@ -13,12 +13,13 @@ public class NetworkSol {
     /**
      * computerConnections represents list of all inter-computer edges
      * Each edge is an Integer[] of size 3
-     * edge[0] = source computer index
-     * edge[1] = destination computer index
+     * edge[0] = source computer index ( Not IP, it's the Index !)
+     * edge[1] = destination computer index ( Not IP, it's the Index !)
      * edge[2] = latency/edge weight
      */
     private LinkedList<Integer[]> computerConnections;
     /**
+     * Adjacency List representing computer graph
      * Adjacency List representing computer graph
      */
     private LinkedList<LinkedList<Integer>> computerGraph;
@@ -30,12 +31,12 @@ public class NetworkSol {
      */
     private LinkedList<LinkedList<Integer>> cluster;
     /**
-     * Adjacency List representing computer graph
+     * Adjacency List representing router graph
      */
     private LinkedList<LinkedList<Integer[]>> routerGraph;
 
-    int verticesComp; // Number of Computers
-    int verticesRouter; // Number of Routers
+    private int verticesComp; // Number of Computers
+    private int verticesRouter; // Number of Routers
 
     Scanner s; // Scanner to read Stdin input
 
@@ -140,7 +141,7 @@ public class NetworkSol {
             computerGraph.add(new LinkedList<>());
         }
 
-        System.out.println(k - 1);
+        //System.out.println(k - 1);
         while (set.components() > k) { // While Union-Find connected components are less than required clusters
 
             Integer[] temp = edges.poll();
@@ -159,7 +160,7 @@ public class NetworkSol {
          * using DFS and assign the IP address with the highest value within a cluster
          * as the IP address of the router
          *
-         * Eg: clustor => 3, 6, 23, 16
+         * Eg: cluster => 3, 6, 23, 16
          *  23 would be IP address of the router
          */
 
@@ -180,20 +181,29 @@ public class NetworkSol {
          * Also create Router to Index and Index to Router maps
          */
 
+        LinkedList<Integer> indexes = new LinkedList<>();
         for (int i = 0; i < cluster.size(); i++) {
 
             int index = routerIP(cluster.get(i));
             Router router = new Router(index);
+            indexes.add(index);
             IpToRouter.putIfAbsent(index,router);
-            routerToIndex.putIfAbsent(router, i);
-            indexToRouter.putIfAbsent(i, router);
 
             for (Integer c : cluster.get(i)) {
                 router.addComp(c);
-                System.out.print(c + " ");
+                //System.out.print(c + " ");
             }
-            System.out.println();
+            //System.out.println();
         }
+
+        Collections.sort(indexes);
+
+        for(int i=0;i<indexes.size();i++){
+            Router router = IpToRouter.get(indexes.get(i));
+            routerToIndex.putIfAbsent(router, i);
+            indexToRouter.putIfAbsent(i, router);
+        }
+
 
         verticesRouter = cluster.size();
 
@@ -208,7 +218,7 @@ public class NetworkSol {
      */
     public void connectCluster() {
 
-        //Initliaze Router Graph
+        //Initialize Router Graph
         for(int i=0;i<cluster.size();i++){
             routerGraph.add(new LinkedList<>());
         }
@@ -220,8 +230,8 @@ public class NetworkSol {
 
             int src, dest;
 
-            int val1 = routerToIndex.get(Integer.parseInt(words[0])); // Index of Router 1 from it's IP
-            int val2 = routerToIndex.get(Integer.parseInt(words[1])); // Index of Router 1 from it's IP
+            int val1 = routerToIndex.get(IpToRouter.get(Integer.parseInt(words[0]))); // Index of Router 1 from it's IP
+            int val2 = routerToIndex.get(IpToRouter.get(Integer.parseInt(words[1]))); // Index of Router 2 from it's IP
             int latency = Integer.parseInt(words[2]); // Latency of connection
 
             /**
@@ -245,12 +255,13 @@ public class NetworkSol {
      *  128 = IP address of Destination Router
      *  192 = IP address of Destination Computer
      */
-    public void traversNetwork() {
+    public int traversNetwork() {
 
         //Parse Input
         String[] locations = s.nextLine().split(" ");
-        String[] srcIPs = locations[0].split(".");
-        String[] destIPs = locations[1].split(".");
+        String[] srcIPs = locations[0].split("\\.");
+        String[] destIPs = locations[1].split("\\.");
+
 
         int srcRouterIP = Integer.parseInt(srcIPs[0]); // Source Router IP
         int srcCompIP = Integer.parseInt(srcIPs[1]); // Source Computer IP
@@ -262,8 +273,7 @@ public class NetworkSol {
         Router dest = IpToRouter.get(destRouterIP); //Router Object of destination
 
         if( !src.checkComp(srcCompIP) || !dest.checkComp(destCompIP) ){ //Check if computers exists within Routers
-            System.out.println("Computer does not exit!");
-            return;
+            return -1;
         }
 
         /**
@@ -280,6 +290,7 @@ public class NetworkSol {
 
         int srcIndex = routerToIndex.get(src);  //Index of source router
         int destIndex = routerToIndex.get(dest); //Index of source router
+        System.out.println("Source: "+srcIndex+" Dest: "+destIndex); // DEBUG
 
         for (int i = 0; i < verticesRouter; i++)
             dist[i] = Integer.MAX_VALUE;
@@ -323,7 +334,7 @@ public class NetworkSol {
             }
         }
 
-        System.out.println(dist[destIndex]);
+        return dist[destIndex];
     }
 
 
@@ -354,6 +365,22 @@ public class NetworkSol {
             if (maxIP < c) maxIP = c;
         }
         return maxIP;
+    }
+
+    public LinkedList<Integer[]> getComputerConnections() {
+        return computerConnections;
+    }
+
+    public LinkedList<LinkedList<Integer>> getComputerGraph() {
+        return computerGraph;
+    }
+
+    public LinkedList<LinkedList<Integer>> getCluster() {
+        return cluster;
+    }
+
+    public LinkedList<LinkedList<Integer[]>> getRouterGraph() {
+        return routerGraph;
     }
 
     public static void main(String[] args) {
