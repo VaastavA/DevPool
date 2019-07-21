@@ -115,9 +115,12 @@ public class NetworkSol {
 
     /**
      * Method to generate clusters from computer graph
+     * Throws Exception when cannot create required clusters
      * @param k number of clusters to be created
      */
-    public void buildCluster(int k) {
+    public void buildCluster(int k) throws Exception {
+
+        if( k > verticesComp) throw new Exception("Cannot create clusters");
 
         UnionFind set = new UnionFind(verticesComp);    // Union-Find for connectivity
 
@@ -271,6 +274,10 @@ public class NetworkSol {
 
         Router src = IpToRouter.get(srcRouterIP);   //Router Object of source
         Router dest = IpToRouter.get(destRouterIP); //Router Object of destination
+
+        if(src == null || dest == null) {
+            return -1;
+        }
 
         if( !src.checkComp(srcCompIP) || !dest.checkComp(destCompIP) ){ //Check if computers exists within Routers
             return -1;

@@ -1,5 +1,7 @@
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -15,6 +17,8 @@ import static org.junit.Assert.assertEquals;
  * @author Vaastav Arora, arora74@purdue.edu
  * @version July 20th 2019
  */
+
+@FixMethodOrder(MethodSorters.JVM)
 public class NetworkTest {
 
     /*
@@ -113,7 +117,7 @@ public class NetworkTest {
         }
 
         try {
-            traverseNetwork = Network.class.getDeclaredMethod("traversNetwork",String.class);
+            traverseNetwork = Network.class.getDeclaredMethod("traversNetwork", String.class);
         } catch (NoSuchMethodException e) {
             Assert.fail("Ensure that Network has a method traverseNetwork() that is declared public !");
         }
@@ -149,7 +153,7 @@ public class NetworkTest {
 
     @Test
     public void testBasic() {
-        testGraph("Basic.txt",6);
+        testGraph("Basic.txt", 6, 0);
     }
 
     /*
@@ -158,7 +162,7 @@ public class NetworkTest {
 
     @Test
     public void testIntermediateKSmall() {
-        testGraph("Intermediate_K_Small.txt",7);
+        testGraph("Intermediate_K_Small.txt", 7, 0);
     }
 
     /*
@@ -167,7 +171,7 @@ public class NetworkTest {
 
     @Test
     public void testIntermediateKLarge() {
-        testGraph("Intermediate_K_Large.txt",10);
+        testGraph("Intermediate_K_Large.txt", 10, 0);
     }
 
     /*
@@ -176,7 +180,7 @@ public class NetworkTest {
 
     @Test
     public void testAdvancedKSmall() {
-        testGraph("Advanced_K_Small.txt",10);
+        testGraph("Advanced_K_Small.txt", 10, 0);
     }
 
     /*
@@ -185,7 +189,47 @@ public class NetworkTest {
 
     @Test
     public void testAdvancedLarge() {
-        testGraph("Advanced_K_Large.txt",20);
+        testGraph("Advanced_K_Large.txt", 20, 0);
+    }
+
+    /*
+     * Tests edge case where Source and Dest comps
+     * are in the same router with Basic.txt
+     */
+
+    @Test
+    public void testSameRouter() {
+        testGraph("Basic.txt", 6, 1);
+    }
+
+    /*
+     * Tests edge case where Source or Dest comp
+     * does not exist with Basic.txt
+     */
+
+    @Test
+    public void testCompNotExist() {
+        testGraph("Basic.txt", 6, 2);
+    }
+
+    /*
+     * Tests edge case where Source or Dest router
+     * does not exist with Basic.txt
+     */
+
+    @Test
+    public void testRouterNotExist() {
+        testGraph("Basic.txt", 6, 3);
+    }
+
+    /*
+     * Tests edge case where clusters cannot be build
+     * with Basic.txt
+     */
+
+    @Test
+    public void testClusterNotPossible() {
+        testGraph("Basic.txt", 26, 4);
     }
 
     /**
@@ -193,7 +237,7 @@ public class NetworkTest {
      * @param filename  Name of file that contains testcase
      * @param clusterNum Number of clusters for specified testcase
      */
-    private void testGraph(String filename, int clusterNum) {
+    private void testGraph(String filename, int clusterNum, int edgeCase) {
 
         Scanner readerSolution = null;
         Scanner readerTest = null;
@@ -205,7 +249,6 @@ public class NetworkTest {
         }
 
 
-
         InputStream stdin = System.in;
         try {
 
@@ -215,25 +258,47 @@ public class NetworkTest {
             solution.buildComputerNetwork();
             test.buildComputerNetwork();
 
-            testBuildComputerNetwork(solution.getComputerConnections(),test.getComputerConnections());
+            testBuildComputerNetwork(solution.getComputerConnections(), test.getComputerConnections());
+
+            if (edgeCase == 4) {
+                try {
+                    test.buildCluster(clusterNum);
+                } catch (Exception e) {
+                    Assert.assertEquals("Ensure exception with the correct message is thrown when cluster cannot be generated !", "Cannot create clusters", e.getMessage());
+                    return;
+                }
+
+                Assert.fail("Ensure exception with the correct message is thrown when cluster cannot be generated !");
+            }
 
             solution.buildCluster(clusterNum);
             test.buildCluster(clusterNum);
 
-            testClusterOrComputerGraph(solution.getComputerGraph(),test.getComputerGraph());
-            testClusterOrComputerGraph(solution.getCluster(),test.getCluster());
+            testClusterOrComputerGraph(solution.getComputerGraph(), test.getComputerGraph());
+            testClusterOrComputerGraph(solution.getCluster(), test.getCluster());
 
             solution.connectCluster();
             test.connectCluster();
 
-            testRouterGraph(solution.getRouterGraph(),test.getRouterGraph());
+            testRouterGraph(solution.getRouterGraph(), test.getRouterGraph());
 
             int testNum = Integer.parseInt(readerSolution.nextLine());
 
-            while (testNum>0){
+            while (testNum > 0 && edgeCase == 0) {
                 String testDijkstra = readerSolution.nextLine();
-                Assert.assertEquals("Ensure you return the shortest distance in traverseNetwork !",solution.traversNetwork(testDijkstra),test.traversNetwork(testDijkstra));
+                Assert.assertEquals("Ensure you return the shortest distance in traverseNetwork !", solution.traversNetwork(testDijkstra), test.traversNetwork(testDijkstra));
                 testNum--;
+            }
+
+            if (edgeCase == 1) {
+                String testDijkstra = "53.43 53.27";
+                Assert.assertEquals("Ensure you return the shortest distance when Src and Dest computer are in same router !", solution.traversNetwork(testDijkstra), test.traversNetwork(testDijkstra));
+            } else if (edgeCase == 2) {
+                String testDijkstra = "53.5 53.47";
+                Assert.assertEquals("Ensure you return -1 when Src or Dest comp does not exist !", solution.traversNetwork(testDijkstra), test.traversNetwork(testDijkstra));
+            } else if (edgeCase == 3) {
+                String testDijkstra = "63.44 53.44";
+                Assert.assertEquals("Ensure you return -1 when Src or Dest router does not exist !", solution.traversNetwork(testDijkstra), test.traversNetwork(testDijkstra));
             }
 
         } catch (Exception e) {
@@ -309,8 +374,9 @@ public class NetworkTest {
 
     /**
      * Helper function to check connectivity
-     * @param cur current node
-     * @param graph graph containing all nodes
+     *
+     * @param cur     current node
+     * @param graph   graph containing all nodes
      * @param visited visited boolean array
      */
     private void DFS(int cur, LinkedList<LinkedList<Integer>> graph, boolean[] visited) {
@@ -324,6 +390,7 @@ public class NetworkTest {
     /**
      * Helper function in testConnectivity
      * Skips all computer edges and sets scanner to router edges
+     *
      * @param s Scanner reading required file
      */
     private void routerSkipper(Scanner s) {
@@ -338,8 +405,9 @@ public class NetworkTest {
 
     /**
      * Helper function to test buildComputerNetwork()
+     *
      * @param expected Expected computerConnections
-     * @param actual Actual computerConnections
+     * @param actual   Actual computerConnections
      */
     private void testBuildComputerNetwork(LinkedList<Integer[]> expected, LinkedList<Integer[]> actual) {
 
@@ -367,8 +435,9 @@ public class NetworkTest {
 
     /**
      * Helper function to test either cluster or computerGraph of Network
+     *
      * @param expectedCluster Expected cluster/computerGraph
-     * @param actualCluster Actual cluster/computerGraph
+     * @param actualCluster   Actual cluster/computerGraph
      */
     private void testClusterOrComputerGraph(LinkedList<LinkedList<Integer>> expectedCluster, LinkedList<LinkedList<Integer>> actualCluster) {
 
@@ -399,8 +468,9 @@ public class NetworkTest {
 
     /**
      * Helper function to test routerGraph of Network
+     *
      * @param expectedGraph Expected routerGraph
-     * @param actualGraph Actual routerGraph
+     * @param actualGraph   Actual routerGraph
      */
     private void testRouterGraph(LinkedList<LinkedList<Integer[]>> expectedGraph, LinkedList<LinkedList<Integer[]>> actualGraph) {
 
@@ -529,8 +599,9 @@ public class NetworkTest {
 
     /**
      * Function to a generate a random collection of router edges for a router graph
-     * @param routerIp Collection of routerIps of the router graph
-     * @param numEdge number of edges to be generated
+     *
+     * @param routerIp    Collection of routerIps of the router graph
+     * @param numEdge     number of edges to be generated
      * @param weightLimit weight limit of edges to be generated
      * @return Collection of router edges
      */
@@ -589,9 +660,10 @@ public class NetworkTest {
 
     /**
      * Function to generate random collection of nodes for a graph and their corresponding edges
-     * @param numNode number of nodes to be generated
-     * @param nodeRange range of nodes to be generated
-     * @param numEdge number of edges to be generated
+     *
+     * @param numNode     number of nodes to be generated
+     * @param nodeRange   range of nodes to be generated
+     * @param numEdge     number of edges to be generated
      * @param weightLimit weight limit of edges to be generated
      * @return Collection of edges representing the graph
      */
@@ -664,6 +736,7 @@ public class NetworkTest {
 
     /**
      * Helper function to find IP address of a cluster
+     *
      * @param babyCluster cluster to find IP address of
      * @return IP address of cluster
      */
