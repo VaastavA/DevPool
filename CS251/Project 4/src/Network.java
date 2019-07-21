@@ -42,8 +42,9 @@ public class Network {
 
     /**
      * Default Network constructor, initializes data structures
+     * @param s Provided Scanner to be used throughout program
      */
-    public Network() {
+    public Network(Scanner s) {
 
         compToIndex = new HashMap<>();
         indexToComp = new HashMap<>();
@@ -59,7 +60,7 @@ public class Network {
         verticesComp = 0;
         verticesRouter = 0;
 
-        s = new Scanner(System.in);
+        this.s = s;
     }
 
     /**
@@ -140,7 +141,6 @@ public class Network {
             computerGraph.add(new LinkedList<>());
         }
 
-        //System.out.println(k - 1);
         while (set.components() > k) { // While Union-Find connected components are less than required clusters
 
             Integer[] temp = edges.poll();
@@ -190,9 +190,7 @@ public class Network {
 
             for (Integer c : cluster.get(i)) {
                 router.addComp(c);
-                System.out.print(c + " ");
             }
-            System.out.println();
         }
 
         Collections.sort(indexes);
@@ -241,24 +239,24 @@ public class Network {
             routerGraph.get(val1).add(temp1);
             routerGraph.get(val2).add(temp2);
         }
-
-        printGraph(routerGraph);
     }
 
     /**
      * Method to take a traversal request and find the shortest path for that traversal
-     * Traversal request read through Stdin using scanner
+     * Traversal request passed in through parameter test
      * Format of Request => [IP address of Source Router].[IP address of Source Computer] [IP address of Destination Router].[IP address of Destination Computer]
      * Eg. 123.456 128.192
      *  123 = IP address of Source Router
      *  456 = IP address of Source Computer
      *  128 = IP address of Destination Router
      *  192 = IP address of Destination Computer
+     * @param test String containing traversal input
+     * @return Shortest traversal distance between Source and Destination Computer
      */
-    public int traversNetwork() {
+    public int traversNetwork(String test) {
 
         //Parse Input
-        String[] locations = s.nextLine().split(" ");
+        String[] locations = test.split(" ");
         String[] srcIPs = locations[0].split("\\.");
         String[] destIPs = locations[1].split("\\.");
 
@@ -290,7 +288,6 @@ public class Network {
 
         int srcIndex = routerToIndex.get(src);  //Index of source router
         int destIndex = routerToIndex.get(dest); //Index of source router
-        System.out.println("Source: "+srcIndex+" Dest: "+destIndex); // DEBUG
 
         for (int i = 0; i < verticesRouter; i++)
             dist[i] = Integer.MAX_VALUE;
@@ -392,11 +389,4 @@ public class Network {
         return routerGraph;
     }
 
-    public static void main(String[] args) {
-        Network network = new Network();
-        network.buildComputerNetwork();
-        network.buildCluster(2);
-        network.connectCluster();
-        network.traversNetwork();
-    }
 }

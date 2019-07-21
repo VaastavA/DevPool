@@ -11,6 +11,10 @@ public class UnionFind {
     private int[] rank;
     private int count;
 
+    /**
+     * Constructor for UnionFind class
+     * @param n number of components
+     */
     public UnionFind(int n) {
         if ( n< 0 ) throw new IllegalArgumentException();
         count = n;
@@ -22,6 +26,11 @@ public class UnionFind {
         }
     }
 
+    /**
+     * Finds parent component of required component
+     * @param p component queried
+     * @return parent compoenent of queried component
+     */
     public int find(int p) {
         while (p != parent[p]) {
             parent[p] = parent[parent[p]];
@@ -30,6 +39,11 @@ public class UnionFind {
         return p;
     }
 
+    /**
+     * Combines two components, giving them the same parent component
+     * @param p Component one to be combined
+     * @param q Component two to be combined
+     */
     public void union(int p,int q){
         int rootP = find(p);
         int rootQ = find(q);
@@ -45,10 +59,20 @@ public class UnionFind {
         count--;
     }
 
+    /**
+     * Checks if two components are connected
+     * @param p Componenet one
+     * @param q Component two
+     * @return returns true if connected
+     */
     public boolean connected(int p, int q){
         return find(p) == find(q);
     }
 
+    /**
+     * Check number of components in Union Find instance
+     * @return number of components in current Union Find instance
+     */
     public int components(){
         return count;
     }
