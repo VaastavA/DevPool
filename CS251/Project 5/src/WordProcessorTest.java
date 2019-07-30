@@ -35,6 +35,7 @@ public class WordProcessorTest {
         try {
             constructorNode = WordProcessor.Node.class.getConstructor(char.class);
         } catch (NoSuchMethodException e) {
+            e.printStackTrace();
             System.out.println("Ensure that Node has a constructor!");
             Assert.fail();
         }
@@ -90,6 +91,7 @@ public class WordProcessorTest {
         Method isEmpty = null;
         Method clear = null;
         Method autoCompleteOptions = null;
+        Method getWordTrie = null;
 
 
         try {
@@ -146,7 +148,199 @@ public class WordProcessorTest {
             System.out.println("Ensure that WordProcessor has a method autoCompleteOptions() that takes a String parameter!");
             Assert.fail();
         }
+
+        try {
+            getWordTrie = WordProcessor.class.getDeclaredMethod("getWordTrie");
+        } catch (NoSuchMethodException e) {
+            System.out.println("Ensure that WordProcessor has a method getWordTrie()!");
+        }
     }
+
+    @Test
+    public void testOneWord() {
+
+        WordProcessor test = new WordProcessor();
+        WordProcessorSol sol = new WordProcessorSol();
+
+        Assert.assertEquals("Ensure that wordTrie is initialized correctly in the constructor!",sol.getWordTrie(),test.getWordTrie());
+
+        test.addWord("Mango");
+        sol.addWord("Mango");
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("Mango"), test.wordSearch("Mango"));
+        Assert.assertEquals("Ensure isEmpty() returns the correct value!", sol.isEmpty(),test.isEmpty());
+
+        optionsCompare(sol.autoCompleteOptions("Ma"),test.autoCompleteOptions("Ma"));
+
+        test.clear();
+        sol.clear();
+
+        Assert.assertEquals("Ensure clear() works as described!", sol.isEmpty(),test.isEmpty());
+
+    }
+
+    @Test
+    public void testFourWords() {
+
+        WordProcessor test = new WordProcessor();
+        WordProcessorSol sol = new WordProcessorSol();
+
+        Assert.assertEquals("Ensure that wordTrie is initialized correctly in the constructor!",sol.getWordTrie(),test.getWordTrie());
+
+        test.addWord("cat");
+        sol.addWord("cat");
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+        Assert.assertEquals("Ensure isEmpty() returns the correct value!", sol.isEmpty(),test.isEmpty());
+
+
+        test.addWord("bug");
+        sol.addWord("bug");
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+        Assert.assertEquals("Ensure isEmpty() returns the correct value!", sol.isEmpty(),test.isEmpty());
+
+
+        test.addWord("cats");
+        sol.addWord("cats");
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+        Assert.assertEquals("Ensure isEmpty() returns the correct value!", sol.isEmpty(),test.isEmpty());
+
+
+        test.addWord("up");
+        sol.addWord("up");
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+        Assert.assertEquals("Ensure isEmpty() returns the correct value!", sol.isEmpty(),test.isEmpty());
+
+        optionsCompare(sol.autoCompleteOptions("Ma"),test.autoCompleteOptions("Ma"));
+        optionsCompare(sol.autoCompleteOptions("ca"),test.autoCompleteOptions("ca"));
+
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("bug"), test.wordSearch("bug"));
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("cats"), test.wordSearch("cats"));
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("up"), test.wordSearch("up"));
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("cat"), test.wordSearch("cat"));
+
+        test.clear();
+        sol.clear();
+
+        Assert.assertEquals("Ensure clear() works as described!", sol.isEmpty(),test.isEmpty());
+
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("bug"), test.wordSearch("bug"));
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("cats"), test.wordSearch("cats"));
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("up"), test.wordSearch("up"));
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("cat"), test.wordSearch("cat"));
+
+        test.addWord("Mango");
+        sol.addWord("Mango");
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+
+        Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch("Mango"), test.wordSearch("Mango"));
+        Assert.assertEquals("Ensure isEmpty() returns the correct value!", sol.isEmpty(),test.isEmpty());
+
+        optionsCompare(sol.autoCompleteOptions("Ma"),test.autoCompleteOptions("Ma"));
+
+        test.clear();
+        sol.clear();
+
+        Assert.assertEquals("Ensure clear() works as described!", sol.isEmpty(),test.isEmpty());
+
+
+    }
+
+    @Test
+    public void testLargeOne() {
+
+        WordProcessor test = new WordProcessor();
+        WordProcessorSol sol = new WordProcessorSol();
+
+        Scanner s = null;
+        HashSet<String> searchSet = new HashSet<>();
+
+        try {
+            s = new Scanner(new File("/Users/vaastavarora/IdeaProjects/Project 5/src/LotrOne.txt"));
+        } catch (FileNotFoundException e) {
+            Assert.fail("File not found exception");
+        }
+
+        int newlineCount = 0;
+
+        while(s.hasNextLine()) {
+            String[] in = s.nextLine().split(" ");
+
+            for(String i: in) {
+
+                if(i.equals("")) continue;
+
+                test.addWord(i);
+                sol.addWord(i);
+                searchSet.add(i);
+            }
+        }
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+
+        for(String j:searchSet) {
+            Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch(j), test.wordSearch(j));
+        }
+
+        for(int k = 0;k<26;k++) {
+            String temp = "";
+            temp += (char)('a'+k);
+            optionsCompare(sol.autoCompleteOptions(temp), test.autoCompleteOptions(temp));
+        }
+    }
+
+    @Test
+    public void testLargeTwo() {
+
+    }
+
+    @Test
+    public void testLargeThree() {
+
+    }
+
+    @Test
+    public void testLargeFour() {
+
+    }
+
+    private void trieCompare(WordProcessorSol.Node exp, WordProcessor.Node actual) {
+
+        if( exp == null && actual == null) return;
+
+        if(exp == null) Assert.fail("Ensure Nodes are added correctly!");
+        else if(actual == null) Assert.fail("Ensure Nodes are added correctly!");
+        else {
+
+            if( exp.c != actual.c || exp.isEnd != actual.isEnd) Assert.fail("Ensure correct Nodes are added to the trie!");
+            trieCompare(exp.left,actual.left);
+            trieCompare(exp.equal,actual.equal);
+            trieCompare(exp.right,actual.right);
+        }
+    }
+
+    private void optionsCompare(List<String> exp, List<String> actual) {
+
+        HashSet<String> expStrings = new HashSet<>();
+
+        for(String i: exp) {
+            expStrings.add(i);
+        }
+
+        for(String i: actual) {
+            if(!expStrings.contains(i)) Assert.fail("Ensure autoCompleteOptions returns the correct recommendation strings!");
+            expStrings.remove(i);
+        }
+
+        if(expStrings.size() >0) Assert.fail("Ensure autoCompleteOptions list includes all recommendation strings!");
+    }
+
 
 
 }

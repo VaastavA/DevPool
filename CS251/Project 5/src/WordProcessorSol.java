@@ -9,7 +9,7 @@ import java.util.List;
  * @auther Vaastav Arora, arora74@purdue.edu
  * @version July 30, 2019
  */
-public class WordProcessor {
+public class WordProcessorSol {
 
     private Node wordTrie;  //Root Node of the Trie
 
@@ -17,11 +17,11 @@ public class WordProcessor {
      * A simple Node class representing each
      * individual node of the trie
      */
-    public class Node {
+    class Node {
 
-        public char c;
-        public Node left, equal, right;
-        public boolean isEnd = false;
+        char c;
+        Node left, equal, right;
+        boolean isEnd = false;
 
         /**
          * Constructor for Node class
@@ -40,9 +40,13 @@ public class WordProcessor {
     /**
      * Defualt constructor for the WordProcessor class
      */
-    public WordProcessor() {
+    public WordProcessorSol() {
 
         wordTrie = null;
+    }
+
+    public Node getWordTrie() {
+        return wordTrie;
     }
 
     /**
@@ -146,10 +150,6 @@ public class WordProcessor {
     public void traverseTrie() {
         String s = "";
         traverseTrieUtil(wordTrie, s);
-    }
-
-    public Node getWordTrie() {
-        return wordTrie;
     }
 
     /**
