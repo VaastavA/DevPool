@@ -17,11 +17,11 @@ public class WordProcessorSol {
      * A simple Node class representing each
      * individual node of the trie
      */
-    class Node {
+    public class Node {
 
-        char c;
-        Node left, equal, right;
-        boolean isEnd = false;
+        protected char c;
+        protected Node left, equal, right;
+        protected boolean isEnd = false;
 
         /**
          * Constructor for Node class
@@ -43,10 +43,6 @@ public class WordProcessorSol {
     public WordProcessorSol() {
 
         wordTrie = null;
-    }
-
-    public Node getWordTrie() {
-        return wordTrie;
     }
 
     /**
@@ -153,6 +149,14 @@ public class WordProcessorSol {
     }
 
     /**
+     * Getter for wordTire
+     * @return Node wordTrie
+     */
+    public Node getWordTrie() {
+        return wordTrie;
+    }
+
+    /**
      * Helper method to traverse the trie
      * @param curr Current node of traversal
      * @param s String formed so far during traversal
@@ -163,13 +167,14 @@ public class WordProcessorSol {
 
             traverseTrieUtil(curr.left, s);
 
+            traverseTrieUtil(curr.right, s);
+
             s += curr.c;
 
             if (curr.isEnd) System.out.println(s);
 
             traverseTrieUtil(curr.equal, s);
 
-            traverseTrieUtil(curr.right, s);
         }
     }
 
@@ -233,12 +238,5 @@ public class WordProcessorSol {
         findWords(curr.left,out,s);
         findWords(curr.right,out,s);
         findWords(curr.equal,out,s+curr.c);
-    }
-
-    public static void main(String[] args) {
-        WordProcessor wp = new WordProcessor();
-        wp.addWord("Mango");
-        System.out.println(wp.autoCompleteOptions("M").get(0));
-        wp.traverseTrie();
     }
 }

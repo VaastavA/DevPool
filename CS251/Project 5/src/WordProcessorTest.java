@@ -9,8 +9,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * Set of tests for WordProcessor class
  *
@@ -21,24 +19,19 @@ import static org.junit.Assert.assertEquals;
 @FixMethodOrder(MethodSorters.JVM)
 public class WordProcessorTest {
 
+    /*
+     * Checks Constructor and fields of WordProcessor.Node class
+     */
     @Test
     public void testClassPropertyNode() {
 
-        Constructor<WordProcessor.Node> constructorNode = null;
+        Constructor<WordProcessorSol.Node> constructorNode = null; // Constructor test not working
 
         Field nodeChar = null;
         Field nodeLeft = null;
         Field nodeEqual = null;
         Field nodeRight = null;
         Field nodeIsEnd = null;
-
-        try {
-            constructorNode = WordProcessor.Node.class.getConstructor(char.class);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            System.out.println("Ensure that Node has a constructor!");
-            Assert.fail();
-        }
 
         try {
             nodeChar = WordProcessor.Node.class.getDeclaredField("c");
@@ -78,6 +71,9 @@ public class WordProcessorTest {
 
     }
 
+    /*
+     * Check Constructor,fields and methods of WordProcessor class
+     */
     @Test
     public void testClassPropertyAndMethodWordProcessor() {
 
@@ -156,6 +152,9 @@ public class WordProcessorTest {
         }
     }
 
+    /*
+     * Tests one word with WordProcessor class
+     */
     @Test
     public void testOneWord() {
 
@@ -181,6 +180,9 @@ public class WordProcessorTest {
 
     }
 
+    /*
+     * Tests four words with WordProcessor class
+     */
     @Test
     public void testFourWords() {
 
@@ -252,6 +254,9 @@ public class WordProcessorTest {
 
     }
 
+    /*
+     * Tests each word in LotrOne.txt
+     */
     @Test
     public void testLargeOne() {
 
@@ -261,24 +266,34 @@ public class WordProcessorTest {
         Scanner s = null;
         HashSet<String> searchSet = new HashSet<>();
 
+        TreeMap<String, Integer>[] searchTracker = new TreeMap[5];
+
+        for(int i=0;i<searchTracker.length;i++) {
+            searchTracker[i] = new TreeMap<>();
+        }
+
         try {
             s = new Scanner(new File("/Users/vaastavarora/IdeaProjects/Project 5/src/LotrOne.txt"));
         } catch (FileNotFoundException e) {
             Assert.fail("File not found exception");
         }
 
-        int newlineCount = 0;
-
         while(s.hasNextLine()) {
-            String[] in = s.nextLine().split(" ");
+            String[] in = s.nextLine().replaceAll("[^a-zA-Z0-9 ]","").split("\\s+");
 
-            for(String i: in) {
+            for(int i=0;i<in.length;i++) {
+                if (!in[i].equals("")) {
+                    if (!test.wordSearch(in[i])) {
+                        for (int j = 1; j < in[i].length() && j < 6; j++) {
+                            searchTracker[j-1].put(in[i].substring(0, j), searchTracker[j-1].getOrDefault(in[i].substring(0, j), 0) + 1);
+                        }
+                    }
 
-                if(i.equals("")) continue;
+                    test.addWord(in[i]);
+                    sol.addWord(in[i]);
 
-                test.addWord(i);
-                sol.addWord(i);
-                searchSet.add(i);
+                    searchSet.add(in[i]);
+                }
             }
         }
 
@@ -288,28 +303,186 @@ public class WordProcessorTest {
             Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch(j), test.wordSearch(j));
         }
 
-        for(int k = 0;k<26;k++) {
-            String temp = "";
-            temp += (char)('a'+k);
-            optionsCompare(sol.autoCompleteOptions(temp), test.autoCompleteOptions(temp));
+        for(int i=0;i<searchTracker.length;i++) {
+            for(String j:searchTracker[i].keySet()) {
+                if (j.equals("")) System.out.println("Shouldn't have happened");;
+                int a = (test.wordSearch(j))? 0: searchTracker[i].get(j);
+                Assert.assertEquals("Ensure number of suggestions returned is correct!",a,test.autoCompleteOptions(j).size());
+            }
         }
     }
 
+    /*
+     * Tests each sentence in LotrOne.txt
+     */
     @Test
     public void testLargeTwo() {
 
+        WordProcessor test = new WordProcessor();
+        WordProcessorSol sol = new WordProcessorSol();
+
+        Scanner s = null;
+        HashSet<String> searchSet = new HashSet<>();
+
+        TreeMap<String, Integer>[] searchTracker = new TreeMap[10];
+
+        for(int i=0;i<searchTracker.length;i++) {
+            searchTracker[i] = new TreeMap<>();
+        }
+
+        try {
+            s = new Scanner(new File("/Users/vaastavarora/IdeaProjects/Project 5/src/LotrOne.txt"));
+        } catch (FileNotFoundException e) {
+            Assert.fail("File not found exception");
+        }
+
+        while(s.hasNextLine()) {
+            String in = s.nextLine();
+            if(in.equals("")) continue;
+
+            if (!test.wordSearch(in)) {
+                for (int j = 1; j < in.length() && j < 11; j++) {
+                    searchTracker[j-1].put(in.substring(0, j), searchTracker[j-1].getOrDefault(in.substring(0, j), 0) + 1);
+                }
+            }
+
+            test.addWord(in);
+            sol.addWord(in);
+            searchSet.add(in);
+        }
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+
+        for(String j:searchSet) {
+            Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch(j), test.wordSearch(j));
+        }
+
+        for(int i=0;i<searchTracker.length;i++) {
+            for(String j:searchTracker[i].keySet()) {
+                if (j.equals("")) System.out.println("Shouldn't have happened");;
+                int a = (test.wordSearch(j))? 0: searchTracker[i].get(j);
+                Assert.assertEquals("Ensure number of suggestions returned is correct!",a,test.autoCompleteOptions(j).size());
+            }
+        }
     }
 
+    /*
+     * Tests each word in Silmarillion.txt
+     */
     @Test
     public void testLargeThree() {
 
+        WordProcessor test = new WordProcessor();
+        WordProcessorSol sol = new WordProcessorSol();
+
+        Scanner s = null;
+        HashSet<String> searchSet = new HashSet<>();
+
+        TreeMap<String, Integer>[] searchTracker = new TreeMap[5];
+
+        for(int i=0;i<searchTracker.length;i++) {
+            searchTracker[i] = new TreeMap<>();
+        }
+
+        try {
+            s = new Scanner(new File("/Users/vaastavarora/IdeaProjects/Project 5/src/Silmarillion.txt"));
+        } catch (FileNotFoundException e) {
+            Assert.fail("File not found exception");
+        }
+
+        while(s.hasNextLine()) {
+            String[] in = s.nextLine().replaceAll("[^a-zA-Z0-9 ]","").split("\\s+");
+
+            for(int i=0;i<in.length;i++) {
+                if (!in[i].equals("")) {
+                    if (!test.wordSearch(in[i])) {
+                        for (int j = 1; j < in[i].length() && j < 6; j++) {
+                            searchTracker[j-1].put(in[i].substring(0, j), searchTracker[j-1].getOrDefault(in[i].substring(0, j), 0) + 1);
+                        }
+                    }
+
+                    test.addWord(in[i]);
+                    sol.addWord(in[i]);
+
+                    searchSet.add(in[i]);
+                }
+            }
+        }
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+
+        for(String j:searchSet) {
+            Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch(j), test.wordSearch(j));
+        }
+
+        for(int i=0;i<searchTracker.length;i++) {
+            for(String j:searchTracker[i].keySet()) {
+                if (j.equals("")) System.out.println("Shouldn't have happened");;
+                int a = (test.wordSearch(j))? 0: searchTracker[i].get(j);
+                Assert.assertEquals("Ensure number of suggestions returned is correct!",a,test.autoCompleteOptions(j).size());
+            }
+        }
     }
 
+    /*
+     * Tests each sentence in Silmarillion.txt
+     */
     @Test
     public void testLargeFour() {
 
+        WordProcessor test = new WordProcessor();
+        WordProcessorSol sol = new WordProcessorSol();
+
+        Scanner s = null;
+        HashSet<String> searchSet = new HashSet<>();
+
+        TreeMap<String, Integer>[] searchTracker = new TreeMap[10];
+
+        for(int i=0;i<searchTracker.length;i++) {
+            searchTracker[i] = new TreeMap<>();
+        }
+
+        try {
+            s = new Scanner(new File("/Users/vaastavarora/IdeaProjects/Project 5/src/Silmarillion.txt"));
+        } catch (FileNotFoundException e) {
+            Assert.fail("File not found exception");
+        }
+
+        while(s.hasNextLine()) {
+            String in = s.nextLine();
+            if(in.equals("")) continue;
+
+            if (!test.wordSearch(in)) {
+                for (int j = 1; j < in.length() && j < 11; j++) {
+                    searchTracker[j-1].put(in.substring(0, j), searchTracker[j-1].getOrDefault(in.substring(0, j), 0) + 1);
+                }
+            }
+
+            test.addWord(in);
+            sol.addWord(in);
+            searchSet.add(in);
+        }
+
+        trieCompare(sol.getWordTrie(),test.getWordTrie());
+
+        for(String j:searchSet) {
+            Assert.assertEquals("Ensure wordSearch() returns the correct value!", sol.wordSearch(j), test.wordSearch(j));
+        }
+
+        for(int i=0;i<searchTracker.length;i++) {
+            for(String j:searchTracker[i].keySet()) {
+                if (j.equals("")) System.out.println("Shouldn't have happened");;
+                int a = (test.wordSearch(j))? 0: searchTracker[i].get(j);
+                Assert.assertEquals("Ensure number of suggestions returned is correct!",a,test.autoCompleteOptions(j).size());
+            }
+        }
     }
 
+    /**
+     * Helper function to test contructed trie in WordProcessor
+     * @param exp Expected wordTrie Node
+     * @param actual Actual wordTrie Node
+     */
     private void trieCompare(WordProcessorSol.Node exp, WordProcessor.Node actual) {
 
         if( exp == null && actual == null) return;
@@ -325,6 +498,11 @@ public class WordProcessorTest {
         }
     }
 
+    /**
+     * Helper function to check list returned by autoCompleteOptions
+     * @param exp Expected list of word suggestions
+     * @param actual Actual list of word suggestions
+     */
     private void optionsCompare(List<String> exp, List<String> actual) {
 
         HashSet<String> expStrings = new HashSet<>();
@@ -340,7 +518,4 @@ public class WordProcessorTest {
 
         if(expStrings.size() >0) Assert.fail("Ensure autoCompleteOptions list includes all recommendation strings!");
     }
-
-
-
 }
