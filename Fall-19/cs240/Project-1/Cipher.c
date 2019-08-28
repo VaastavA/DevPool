@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 int key = ~0;
 
 void  decrypt() {
@@ -14,7 +13,7 @@ void encrypt(int charCount ) {
 	while ( charCount >= 0 ) {
 		c = getchar();
 		if ( c == ' ' || c == '\t' || c == '\n' ) {
-			puchar(c);
+			putchar(c);
 		} else {
 			if ( counter % 4 == 0 ) {
 				keyTemp = 0;
@@ -34,7 +33,7 @@ void encrypt(int charCount ) {
 int findKey() {
 	
 	int keyE,keyD;
-	scanf("%d %d\n",keyD,keyE);
+	scanf("%d %d\n",&keyD,&keyE);
 	return keyE ^ keyD;
 
 }
@@ -42,17 +41,17 @@ int main() {
 	printf("Welcome to Cipher\n");
 
 	while(1) {
-		printf("Choose an option:\nA Encrpyt Text\nB Decrypt Text\nC Find Key\nD Exit\n);
+		printf("Choose an option:\nA Encrpyt Text\nB Decrypt Text\nC Find Key\nD Exit\n");
 		char ans = getchar();
 		if( ans == 'D' ){
 			break;
 		} else if( ans == 'A' ) {
 			int charCount;
-			scanf("%d\n",charCount);
+			scanf("%d\n",&charCount);
 			encrypt(charCount);
 		} else if( ans == 'B' ) {
 			decrypt();
-		} else if( ans == 'C ) {
+		} else if( ans == 'C' ) {
 			findKey();
 		} else {
 			printf("Invalid Input\n");
