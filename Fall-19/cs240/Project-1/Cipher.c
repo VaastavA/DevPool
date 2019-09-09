@@ -1,8 +1,33 @@
 #include <stdio.h>
 int key = ~0;
 
-void  decrypt() {
-	
+int  decrypt() {
+
+	int keyTemp;
+        int counter = 0;
+	int charCount = 0;
+        char c = getchar();
+        while ( (int)c != 27 ) {
+		
+		charCount++;
+
+                if ( c == ' ' || c == '\t' || c == '\n' ) {
+                        putchar(c);
+                } else {
+                        if ( counter % 4 == 0 ) {
+                                keyTemp = 0;
+                        } else {
+                                keyTemp >>= 4;
+                        }
+                        char temp = (char) (15 & keyTemp);
+                        c ^= temp;
+                        putchar(c);
+                        counter++;
+                }
+                c = getchar();
+        }
+
+	return charCount;
 }
 
 void encrypt(int charCount ) {
@@ -16,7 +41,7 @@ void encrypt(int charCount ) {
 			putchar(c);
 		} else {
 			if ( counter % 4 == 0 ) {
-				keyTemp = 0;
+				keyTemp = key;
 			} else {
 				keyTemp >>= 4;
 			}
@@ -34,6 +59,7 @@ int findKey() {
 	
 	int keyE,keyD;
 	scanf("%d %d\n",&keyD,&keyE);
+	getchar();
 	return keyE ^ keyD;
 
 }
@@ -50,9 +76,9 @@ int main() {
 			scanf("%d\n",&charCount);
 			encrypt(charCount);
 		} else if( ans == 'B' ) {
-			decrypt();
+			printf("%d\n",decrypt());
 		} else if( ans == 'C' ) {
-			findKey();
+			key = findKey();
 		} else {
 			printf("Invalid Input\n");
 		}
