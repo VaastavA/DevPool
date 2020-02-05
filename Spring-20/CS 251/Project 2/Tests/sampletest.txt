@@ -1,0 +1,6 @@
+insert 1 10
+insert 2 11
+insert 3 12
+search 2
+rank 3
+getval 1
