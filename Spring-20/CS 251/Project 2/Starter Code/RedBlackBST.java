@@ -62,87 +62,12 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 	// insert the key-value pair; overwrite the old value with the new value
 	// if the key is already present
 	public void insert(Key key, Value val) {
-		root = insert(root, key, val);
-		root.color = BLACK;
-		// assert check();
-	}
-
-	// insert the key-value pair in the subtree rooted at h
-	private Node insert(Node h, Key key, Value val) {
-		if (h == null) return new Node(key, val, RED, 1);
-
-		int cmp = key.compareTo(h.key);
-		if      (cmp < 0) h.left  = insert(h.left,  key, val);
-		else if (cmp > 0) h.right = insert(h.right, key, val);
-		else              h.val   = val;
-
-		// fix-up any right-leaning links
-		if (isRed(h.right) && !isRed(h.left))      h = rotateLeft(h);
-		if (isRed(h.left)  &&  isRed(h.left.left)) h = rotateRight(h);
-		if (isRed(h.left)  &&  isRed(h.right))     flipColors(h);
-		h.N = size(h.left) + size(h.right) + 1;
-
-		return h;
+		//TODO
 	}
 
 	// delete the key-value pair with the given key
 	public void delete(Key key) {
-		if (key == null) throw new IllegalArgumentException("argument to delete() is null");
-		if (!contains(key)) return;
-
-		// if both children of root are black, set root to red
-		if (!isRed(root.left) && !isRed(root.right))
-			root.color = RED;
-
-		root = delete(root, key);
-		if (!isEmpty()) root.color = BLACK;
-		// assert check();
-	}
-
-	// delete the key-value pair with the given key rooted at h
-	private Node delete(Node h, Key key) {
-		// assert get(h, key) != null;
-
-		if (key.compareTo(h.key) < 0)  {
-			if (!isRed(h.left) && !isRed(h.left.left))
-				h = moveRedLeft(h);
-			h.left = delete(h.left, key);
-		}
-		else {
-			if (isRed(h.left))
-				h = rotateRight(h);
-			if (key.compareTo(h.key) == 0 && (h.right == null))
-				return null;
-			if (!isRed(h.right) && !isRed(h.right.left))
-				h = moveRedRight(h);
-			if (key.compareTo(h.key) == 0) {
-				Node x = min(h.right);
-				h.key = x.key;
-				h.val = x.val;
-				// h.val = get(h.right, min(h.right).key);
-				// h.key = min(h.right).key;
-				h.right = deleteMin(h.right);
-			}
-			else h.right = delete(h.right, key);
-		}
-		return balance(h);
-	}
-
-	private Node deleteMin(Node h) {
-		if (h.left == null)
-			return null;
-
-		if (!isRed(h.left) && !isRed(h.left.left))
-			h = moveRedLeft(h);
-
-		h.left = deleteMin(h.left);
-		return balance(h);
-	}
-
-	private Node min(Node x) {
-		// assert x != null;
-		if (x.left == null) return x;
-		else                return min(x.left);
+		//TODO
 	}
 
 	/*************************************************************************
@@ -150,17 +75,8 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 	 *************************************************************************/
 
 	// value associated with the given key; null if no such key
-	public Value search(Key key) { return search(root, key); }
-
-	// value associated with the given key in subtree rooted at x; null if no such key
-	private Value search(Node x, Key key) {
-		while (x != null) {
-			int cmp = key.compareTo(x.key);
-			if      (cmp < 0) x = x.left;
-			else if (cmp > 0) x = x.right;
-			else              return x.val;
-		}
-		return null;
+	public Value search(Key key) { 
+		//TODO
 	}
 
 	// is there a key-value pair with the given key?
@@ -189,33 +105,12 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 
 	// the key of rank k
 	public Key getValByRank(int k) {
-		if (k < 0 || k >= size())  return null;
-		Node x = select(root, k);
-		return x.key;
-	}
-
-	// the key of rank k in the subtree rooted at x
-	private Node select(Node x, int k) {
-		// assert x != null;
-		// assert k >= 0 && k < size(x);
-		int t = size(x.left);
-		if      (t > k) return select(x.left,  k);
-		else if (t < k) return select(x.right, k-t-1);
-		else            return x;
+		//TODO
 	}
 
 	// number of keys less than key
 	public int rank(Key key) {
-		return rank(key, root);
-	}
-
-	// number of keys less than key in the subtree rooted at x
-	private int rank(Key key, Node x) {
-		if (x == null) return 0;
-		int cmp = key.compareTo(x.key);
-		if      (cmp < 0) return rank(key, x.left);
-		else if (cmp > 0) return 1 + size(x.left) + rank(key, x.right);
-		else              return size(x.left);
+		//TODO
 	}
 
 
@@ -224,42 +119,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 	 ***********************************************************************/
 
 	public List<Key> getElements(int a, int b){
-		LinkedList<Key> out = new LinkedList<>();
-		if(size()<=b || a<0) return out;
-		getElements(root,a+1,b+1, out);
-		return out;
-	}
-
-	public void getElements(Node node,int low, int high, LinkedList<Key> out){
-		if (node == null) return;
-
-		int leftSize = 0;
-		int rightSize = 0;
-		int size = node.N;
-		if (node.left != null) leftSize = node.left.N;
-		if (node.right != null) rightSize = node.right.N;
-
-		int pos = size-rightSize;
-
-		if(leftSize>=low){
-
-			int newHigh;
-			if(high>=pos) newHigh = leftSize;
-			else newHigh = high;
-			getElements(node.left,low,high,out);
-		}
-
-		if(pos>=low && pos<= high){
-			out.add(node.key);
-		}
-
-		if(high>pos){
-			int newLow,newHigh;
-			newHigh = high-pos;
-			if(low<=pos) newLow = 0;
-			else newLow = low;
-			getElements(node.right,newLow,newHigh,out);
-		}
+		//TODO
 	}
 
 	/*************************************************************************
