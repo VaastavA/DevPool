@@ -226,39 +226,32 @@ public class RedBlackBSTSol<Key extends Comparable<Key>, Value> {
     public List<Key> getElements(int a, int b){
         LinkedList<Key> out = new LinkedList<>();
         if(size()<=b || a<0) return out;
-        getElements(root,a+1,b+1, out);
+        getElements(root,a,b, out,0);
         return out;
     }
 
-    public void getElements(Node node,int low, int high, LinkedList<Key> out){
+    public void getElements(Node node, int low, int high, LinkedList<Key> out, int offset){
         if (node == null) return;
 
         int leftSize = 0;
         int rightSize = 0;
-        int size = node.N;
+        int size = node.N+offset;
         if (node.left != null) leftSize = node.left.N;
         if (node.right != null) rightSize = node.right.N;
 
         int pos = size-rightSize;
+        int rank = pos-1;
 
-        if(leftSize>=low){
-
-            int newHigh;
-            if(high>=pos) newHigh = leftSize;
-            else newHigh = high;
-            getElements(node.left,low,high,out);
+        if(leftSize+offset>=low){
+            getElements(node.left,low,high,out,offset);
         }
 
-        if(pos>=low && pos<= high){
+        if(rank>=low && rank<= high){
             out.add(node.key);
         }
 
-        if(high>pos){
-            int newLow,newHigh;
-            newHigh = high-pos;
-            if(low<=pos) newLow = 0;
-            else newLow = low;
-            getElements(node.right,newLow,newHigh,out);
+        if(high>rank){
+            getElements(node.right,low,high,out,pos);
         }
     }
 

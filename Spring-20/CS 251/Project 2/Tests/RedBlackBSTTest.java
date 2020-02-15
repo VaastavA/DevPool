@@ -106,11 +106,6 @@ public class RedBlackBSTTest {
         while(readerTest.hasNextLine()){
             String[] input  =readerTest.nextLine().split(" ");
 
-            for(String x: input){
-                System.out.print(x+" ");
-            }
-
-            System.out.println();
             switch (input[0]){
                 case "insert":
                     Integer key = Integer.parseInt(input[1]);
@@ -139,8 +134,8 @@ public class RedBlackBSTTest {
                     break;
                 case "rank":
                     Integer key4 = Integer.parseInt(input[1]);
-                    Object ans12 = sol.getValByRank(key4);
-                    Object ans22 = test.getValByRank(key4);
+                    Object ans12 = sol.rank(key4);
+                    Object ans22 = test.rank(key4);
                     assertEquals("Ensure rank returns correct value!",ans12,ans22);
                     break;
                 case "getelement":
@@ -148,13 +143,18 @@ public class RedBlackBSTTest {
                     Integer high = Integer.parseInt(input[2]);
                     List<Integer> solList = sol.getElements(low,high);
                     List<Integer> testList = test.getElements(low,high);
-                    //TODO: list compare
+
+
+                    assertEquals("Ensure getElement returns correct elements!",solList,testList);
                     break;
                     default:
+                        System.out.println(input[0]);
                         Assert.fail("Error, Invalid test instruction!");
 
             }
         }
+
+        test.drawTree();
 
     }
 
@@ -183,6 +183,18 @@ public class RedBlackBSTTest {
     @Test
     public void testSample() {
         genericTester("/Users/vaastavarora/Downloads/project3_solution/src/sampletest.txt");
+    }
+    @Test
+    public void testSample1() {
+        genericTester("/Users/vaastavarora/Downloads/project3_solution/src/test2");
+    }
+    @Test
+    public void testSample2() {
+        genericTester("/Users/vaastavarora/Downloads/project3_solution/src/search.txt");
+    }
+    @Test
+    public void testSample3() {
+        genericTester("/Users/vaastavarora/Downloads/project3_solution/src/delete.txt");
     }
 
 

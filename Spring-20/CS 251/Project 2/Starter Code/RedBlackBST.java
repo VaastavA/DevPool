@@ -65,6 +65,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 		//TODO
 	}
 
+
 	// delete the key-value pair with the given key
 	public void delete(Key key) {
 		//TODO
@@ -75,9 +76,8 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 	 *************************************************************************/
 
 	// value associated with the given key; null if no such key
-	public Value search(Key key) { 
-		//TODO
-	}
+	public Value search(Key key) { //TODO }
+
 
 	// is there a key-value pair with the given key?
 	public boolean contains(Key key) {
@@ -112,6 +112,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 	public int rank(Key key) {
 		//TODO
 	}
+
 
 
 	/***********************************************************************
@@ -199,6 +200,42 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
 
 		h.N = size(h.left) + size(h.right) + 1;
 		return h;
+	}
+
+	public void drawTree() {
+		LinkedList<String> tree = new LinkedList<>();
+		tree = new LinkedList<>();
+		drawTreeNode(root,tree,0);
+
+		for(String x : tree){
+			System.out.print(x+" ");
+		}
+	}
+
+	private void drawTreeNode(Node node,LinkedList<String> tree, int level){
+		if(node == null) return;
+
+
+		drawTreeNode(node.left,tree,level+1);
+		tree.add(node.key.toString()+"("+node.color+","+node.N+")");
+		drawTreeNode(node.right,tree,level+1);
+
+	}
+
+	public static void main(String[] args) {
+		RedBlackBST<Integer,Integer> t = new RedBlackBST<>();
+		t.insert(4,500);
+		t.insert(5,100);
+		t.insert( 1,2);
+		t.insert(8,43);
+		t.insert(3,243);
+		t.drawTree();
+		List<Integer> OUT = t.getElements(1,3);
+		for(Integer o:OUT){
+			System.out.print(o+" ");
+		}
+
+
 	}
 
 }
