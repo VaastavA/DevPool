@@ -1,5 +1,20 @@
 public class HashTable {
+    public class Pair {
+        public String key;
+        public Product value;
+        Pair next;
 
+        public Pair(String key, Product value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String toString() {
+            return key+ ": $" + value.getPrice() + " Sold By: "+ value.getVendor();
+        }
+
+
+    }
 
     int capacity = 20;
     int size = 0;
@@ -75,14 +90,31 @@ public class HashTable {
      * We hard code a list of prime number for you to use. You can assume you will never run out of prime number to use.
      * Return the resized HashTable.
      */
-    public Object resize() {
+    public Pair[] resize() {
         //TODO: Resize Function
 
 
         /* Change to Return HashTable */
         return null;
     }
+    /**
+     * Returns the (key, value) pair from the table, if it's there.
+     * Returns null, if the key doesn’t exist in the table.
+     */
+    public Pair get(String key) {
+        //TODO: Get Function
+        return null;
+    }
+
+    /**
+     * Returns True if Pair is removed.
+     * Returns False, if the key doesn’t exist in the table.
+     */
+    public boolean remove(String key) {
+        //TODO: Remove Function
+        return false;
+    }
 
     
-    //TODO: get department ratings from hashtable for part 2
+
 }
