@@ -1,17 +1,21 @@
 public class Product {
 
+    String name;
     String vendor;
     int depRating;
     double price;
     int stock;
 
-    public Product (String vendor, int depRating, double price, int stock) {
-
+    public Product (String name, String vendor, int depRating, double price, int stock) {
+        this.name = name;
         this.vendor = vendor;
         this.depRating = depRating;
         this.price = price;
         this.stock = stock;
 
+    }
+    public String getName() {
+        return name;
     }
 
     public String getVendor() {
@@ -30,10 +34,5 @@ public class Product {
         return stock;
     }
 
-    public String toString() {
 
-        //change later maybe?
-        return vendor + " " + depRating + " " + price + " " + stock;
-
-    }
 }
