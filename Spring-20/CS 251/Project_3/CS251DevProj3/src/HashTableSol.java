@@ -1,22 +1,20 @@
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.Scanner;
 
 public class HashTableSol {
 
     public class Pair {
-        public int key;
+        public String key;
         public Product value;
         Pair next;
 
-        public Pair(int key, Product value) {
+        public Pair(String key, Product value) {
             this.key = key;
             this.value = value;
         }
 
         public String toString() {
-            return value.toString() + " " +key;
+            return key+ ": $" + value.getPrice() + " Sold By: "+ value.getVendor();
         }
 
 
@@ -33,15 +31,6 @@ public class HashTableSol {
 
     public static void main(String[] args) throws Exception {
         HashTableSol hash = new HashTableSol();
-      //  hash.load("test.txt");
-       // hash.print();
-       // hash.getCollisions();
-        hash.load("testBigger.txt");
-        hash.print();
-       // System.out.println(hash.size + " " + hash.capacity);
-       // hash.getCollisions();
-        hash.getRating();
-
 
     }
 
@@ -56,15 +45,18 @@ public class HashTableSol {
 
         while (in.hasNextLine()) {
             line = in.nextLine();
-            String[] arr = line.split(" ");
-            String vendor = arr[0];
-            int depRating = Integer.valueOf(arr[1]);
-            double price = Double.valueOf(arr[2]);
-            int stock = Integer.valueOf(arr[3]);
+            String[] arr = line.split(": ");
+            String name = arr[0];
+            String rest = arr[1];
+            String[] arr2 = rest.split(", ");
+            String vendor = arr2[0];
+            int depRating = Integer.valueOf(arr2[1]);
+            double price = Double.valueOf(arr2[2]);
+            int stock = Integer.valueOf(arr2[3]);
 
-            Product product = new Product(vendor, depRating, price, stock);
+            Product product = new Product(name, vendor, depRating, price, stock);
 
-            put(vendor,product);
+            put(name,product);
 
 
         }
@@ -72,9 +64,9 @@ public class HashTableSol {
 
     }
 
-    public void put(String vendor, Product value) {
-        int ind = hashCode(vendor);
-        int key = ind;
+    public void put(String name, Product value) {
+        int ind = hashCode(name);
+        String key = name;
         Pair find = table[ind];
         Pair pair = new Pair(key, value);
         if (find == null) {
@@ -110,20 +102,27 @@ public class HashTableSol {
         }
     }
 
+
     public void getCollisions() {
         Pair collision;
         for(int i = 0; i < table.length; i++) {
             collision = table[i];
             if (collision != null) {
-                while(collision.next != null) {
-                    int col = collision.key;
-                    System.out.print("Collision at index "+ col + ": " + collision.value.getVendor());
-                    System.out.println(", " + collision.next.value.getVendor());
-                    collision = collision.next;
+                if(collision.next != null) {
+                    int col = hashCode(collision.key);
+                    System.out.print("Collision at index " + col + ": " + collision.key);
+
+                    while (collision.next != null) {
+
+                        System.out.print(", " + collision.next.key);
+                        collision = collision.next;
+                    }
+                    System.out.println();
                 }
             }
         }
     }
+
 
     public Pair[] resize() {
         Pair[] temp = table;
@@ -141,10 +140,10 @@ public class HashTableSol {
         for (int i = 0; i < capacity/mult; i++) {
             Pair current = temp[i];
             if(current != null) {
-                put(current.value.getVendor(), current.value);
+                put(current.key, current.value);
                 while(current.next != null) {
                     current = current.next;
-                    put(current.value.getVendor(),current.value);
+                    put(current.key,current.value);
                 }
             }
         }
@@ -152,26 +151,82 @@ public class HashTableSol {
     }
 
 
-    public void getRating() throws Exception {
-        File ratings = new File("ratings.txt");
-        BufferedWriter writer = new BufferedWriter(new FileWriter(ratings));
-        Pair rate;
-        for (int i = 0; i < table.length; i++) {
-            rate = table[i];
-            if (rate != null) {
-               // System.out.println(rate.value.getDepRating());
-                writer.write(rate.value.getVendor() + " " + rate.value.depRating);
-                writer.write("\n");
+    public Pair find(String key, int ind) {
+        Pair pair = table[ind];
+        while (pair != null && !(pair.key.equals(key)))
+            pair = pair.next;
+        return pair;
+    }
 
-                while (rate.next != null) {
-                   // System.out.println(rate.next.value.getDepRating());
-                    writer.write(rate.next.value.getVendor() + " " + rate.next.value.depRating);
-                    writer.write("\n");
-                    rate = rate.next;
+    public Pair get(String key) {
+        int ind = hashCode(key);
+        Pair pair = find(key,ind);
+        if (pair == null) {
+            return null;
+        }
+        else {
+            return pair;
+        }
+    }
+
+
+
+    public boolean remove(String key) {
+        Pair head = get(key);
+        Pair prev = null;
+        if (head == null) {
+            return false;
+        }
+        else {
+            int ind = hashCode(key);
+
+            Pair find = table[ind];
+            if (find.key.equals(key)) {
+                if (find.next == null) {
+                    Pair pair = null;
+                    table[ind] = pair;
+                }
+                else {
+                    while(find != null) {
+                        if(find.key.equals(key)){
+                            if (prev != null){
+                                prev.next = find.next;
+                            }else{
+                                table[ind] = find.next;
+                            }
+
+                        }
+
+                        prev = find;
+                        find = find.next;
+                    }
+
+
                 }
             }
+            else {
+                while(find != null) {
+                    if(find.key.equals(key)){
+                        if (prev != null){
+                            prev.next = find.next;
+                        }else{
+                            table[ind] = find.next;
+                        }
+
+                    }
+
+                    prev = find;
+                    find = find.next;
+                }
+
+            }
+
+
+            size--;
+            return true;
         }
-        writer.close();
+
+
     }
 
 
