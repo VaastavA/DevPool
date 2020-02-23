@@ -31,30 +31,36 @@ public class HashTableSol {
 
     public static void main(String[] args) throws Exception {
         HashTableSol hash = new HashTableSol();
-
     }
 
     public int hashCode(String name) {
         int index = Math.abs(name.hashCode())%capacity;
         return index;
     }
+    
+    public int getCapacity() {
+        return capacity;
+    }
 
     public void load(String filename) throws Exception {
         Scanner in = new Scanner(new File(filename));
         String line = null;
-
+        in.nextLine(); //This will read the first line, which is Name, Vendor, Price, Department Rate
+        
         while (in.hasNextLine()) {
             line = in.nextLine();
-            String[] arr = line.split(": ");
+            String[] arr = line.split("; ");
             String name = arr[0];
-            String rest = arr[1];
-            String[] arr2 = rest.split(", ");
-            String vendor = arr2[0];
-            int depRating = Integer.valueOf(arr2[1]);
-            double price = Double.valueOf(arr2[2]);
-            int stock = Integer.valueOf(arr2[3]);
-
-            Product product = new Product(name, vendor, depRating, price, stock);
+            String vendor = arr[1];
+            double price = Double.valueOf(arr[2].split("\\$")[1]); 
+            String[] depRateString = arr[3].split("\\[")[1].split("\\]")[0].split(", ");
+            int[] depRating = new int[depRateString.length];
+            
+            for (int i = 0; i<depRating.length; i++) {
+                depRating[i] = Integer.parseInt(depRateString[i]);
+            }
+        
+            Product product = new Product(name, vendor, depRating, price);
 
             put(name,product);
 

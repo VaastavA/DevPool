@@ -2,16 +2,14 @@ public class Product {
 
     String name;
     String vendor;
-    int depRating;
+    int[] depRating;
     double price;
-    int stock;
 
-    public Product (String name, String vendor, int depRating, double price, int stock) {
+    public Product (String name, String vendor, int[] depRating, double price) {
         this.name = name;
         this.vendor = vendor;
         this.depRating = depRating;
         this.price = price;
-        this.stock = stock;
 
     }
     public String getName() {
@@ -22,7 +20,7 @@ public class Product {
         return vendor;
     }
 
-    public int getDepRating() {
+    public int[] getDepRating() {
         return depRating;
     }
 
@@ -30,9 +28,6 @@ public class Product {
         return price;
     }
 
-    public int getStock() {
-        return stock;
-    }
 
 
 }

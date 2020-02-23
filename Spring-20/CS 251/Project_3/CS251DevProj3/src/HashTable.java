@@ -50,6 +50,15 @@ public class HashTable {
         return index;
     }
 
+    /**
+     * Get the capacity of the HashTable. DO NOT CHANGE!
+     * 
+     * @return capacity of the HashTable
+     * */
+    public int getCapacity() {
+        return capacity;
+    }
+
 
     /**
      * Load contents of filename into your hashtable
