@@ -11,7 +11,7 @@ public class RecommmenderSol {
 
     int swaps, compares;
     int[] inversionCounts;
-    List<String> products;
+    String[] products;
 
     public RecommmenderSol(){
         swaps = 0;
@@ -30,7 +30,10 @@ public class RecommmenderSol {
         arr[index1] = arr[index2];
         arr[index2] = temp;
 
-        Collections.swap(products, index1, index2);
+        String tempS = products[index1];
+        products[index1] = products[index2];
+        products[index2] = tempS;
+
     }
 
 
@@ -40,7 +43,7 @@ public class RecommmenderSol {
      * Do not change above code
      ********************************/
 
-    public int[] recommend(String dataset, String recentPurchase, String[] options){
+    public String[] recommend(String dataset, String recentPurchase, String[] options){
         HashTable hash = new HashTable();
         
         try {
@@ -62,8 +65,16 @@ public class RecommmenderSol {
         }
 
         inversionCounts = recProds;
+        products = options;
+        int[] absCount = recProds.clone();
+
+        for(int i=0;i<recProds.length;i++){
+            absCount[i] = Math.abs(absCount[i]-p1);
+        }
+
+        sort(absCount,0,absCount.length-1);
         
-        return inversionCounts;
+        return products;
     }
 
     private int countInversions(int[] arr){
