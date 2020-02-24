@@ -24,13 +24,18 @@ public class Recommender{
     public int getswaps() {
         return swaps;
     }
-
+    /**************
+     * This function is for the quick sort.
+     **************/
     private boolean compare(int a ,int b){
         compares++;
         return a < b;
 
     }
-
+    /***************
+     * This functions is for the quick sort.
+     * By using this function, change similarity and product name at the same time.
+     *****************/
     private void swap(int[] arr, int index1, int index2){
         swaps++;
         int temp = arr[index1];
@@ -69,7 +74,7 @@ public class Recommender{
         products = options;
     	// TODO
     	
-        return null;
+        return products;
     
 
 }
