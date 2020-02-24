@@ -5,7 +5,7 @@ import java.util.List;
 
 import java.lang.Math;
 
-public class RecommmenderSol {
+public class RecommenderSol {
 
     /********************************
      * Do not change below code
@@ -15,7 +15,7 @@ public class RecommmenderSol {
     int[] inversionCounts;
     String[] products;
 
-    public RecommmenderSol(){
+    public RecommenderSol(){
         swaps = 0;
         compares = 0;
     }
