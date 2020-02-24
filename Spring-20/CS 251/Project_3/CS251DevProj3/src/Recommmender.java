@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Recommmender{
+public class Recommender{
 
     /********************************
      * Do not change below code
@@ -13,7 +13,7 @@ public class Recommmender{
     int[] inversionCounts;
     List<String> products;
 
-    public Recommmender(){
+    public Recommender(){
         swaps = 0;
         compares = 0;
     }
