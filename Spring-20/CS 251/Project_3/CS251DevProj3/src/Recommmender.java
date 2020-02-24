@@ -51,7 +51,7 @@ public class Recommmender{
      * Compare the similarity of depRating between RecentPurchase's and each option's.  
      * Use inverse count to get the similarity of two array. 
      * */
-    public int[] recommend(String dataset ,String recentPurchase, List<String> options){
+    public int[] recommend(String dataset, String recentPurchase, String[] options){
 
         return null;
     }
