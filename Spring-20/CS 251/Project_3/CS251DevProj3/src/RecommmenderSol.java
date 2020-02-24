@@ -40,28 +40,36 @@ public class RecommmenderSol {
      * Do not change above code
      ********************************/
 
-
-    public List<Product> recommend(String recentPurchase, List<String> options){
-
-
-        int[] p1Dept = {1,2,3}; //Replace with hashtable fetch for recentPurchase
+    public int[] recommend(String dataset, String recentPurchase, String[] options){
+        HashTable hash = new HashTable();
+        
+        try {
+            hash.load(dataset);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        int[] p1Dept = hash.get(recentPurchase).value.getDepRating();
+//      int[] p1Dept = {1,2,3,4};
         int p1 = countInversions(p1Dept);
 
-        int[] recProds = new int[options.size()];
+        int[] recProds = new int[options.length];
 
         for(int i=0;i<recProds.length;i++){
-            int[] tempDept = {3,2,1};   //Replace with hashtable fetch for options[i]
+            int[] tempDept = hash.get(options[i]).value.getDepRating();
+//            int[] tempDept = {3,2,4,1};   //Replace with hashtable fetch for options[i]
             recProds[i] = countInversions(tempDept);
         }
 
         inversionCounts = recProds;
-        products = options;
-
+        
+        return inversionCounts;
     }
 
     private int countInversions(int[] arr){
-        System.out.println(mergeSortAndCount(arr,0,arr.length-1));
-        return mergeSortAndCount(arr,0,arr.length-1);
+        int count = mergeSortAndCount(arr,0,arr.length-1);
+        System.out.println(count);
+        return count;
     }
 
     private static int mergeAndCount(int[] arr, int l, int m, int r) {

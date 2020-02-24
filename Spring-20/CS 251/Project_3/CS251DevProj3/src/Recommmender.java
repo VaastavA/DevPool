@@ -47,11 +47,11 @@ public class Recommmender{
 
 
     /**
-     * Get the sequence of recommendation by sorting the inverse count.
+     * Get the sequence of recommendation from the dataset by sorting the inverse count.
      * Compare the similarity of depRating between RecentPurchase's and each option's.  
      * Use inverse count to get the similarity of two array. 
      * */
-    public List<Product> recommend(String recentPurchase, List<String> options){
+    public int[] recommend(String dataset ,String recentPurchase, List<String> options){
 
         return null;
     }
