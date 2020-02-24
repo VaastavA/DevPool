@@ -3,6 +3,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import java.lang.Math;
+
 public class Recommender{
 
     /********************************
@@ -11,7 +13,7 @@ public class Recommender{
 
     int swaps, compares;
     int[] inversionCounts;
-    List<String> products;
+    String products;
 
     public Recommender(){
         swaps = 0;
@@ -38,7 +40,10 @@ public class Recommender{
         arr[index1] = arr[index2];
         arr[index2] = temp;
 
-        Collections.swap(products, index1, index2);
+        String tempS = products[index1];
+        products[index1] = products[index2];
+        products[index2] = tempS;
+
     }
 
     /********************************
