@@ -3,6 +3,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import java.lang.Math;
+
 public class RecommmenderSol {
 
     /********************************
@@ -42,10 +44,35 @@ public class RecommmenderSol {
     /********************************
      * Do not change above code
      ********************************/
-
-    public String[] recommend(String dataset, String recentPurchase, String[] options){
+    
+     public int[] inversionCounts(String dataset, String[] options) {
         HashTable hash = new HashTable();
         
+        try {
+            hash.load(dataset);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }       
+        
+        int[] recProds = new int[options.length];
+    	
+        for(int i=0;i<recProds.length;i++){
+            int[] tempDept = hash.get(options[i]).value.getDepRating();
+//            int[] tempDept = {3,2,4,1};   //Replace with hashtable fetch for options[i]
+            recProds[i] = countInversions(tempDept);
+        }
+        
+        return recProds;
+    	
+    	
+    }
+    
+    public String[] recommend(String dataset, String recentPurchase, String[] options){
+        products = options;    	
+    	// TODO
+        
+    	HashTable hash = new HashTable();
+          
         try {
             hash.load(dataset);
         } catch (Exception e) {
@@ -53,26 +80,20 @@ public class RecommmenderSol {
         }
         
         int[] p1Dept = hash.get(recentPurchase).value.getDepRating();
-//      int[] p1Dept = {1,2,3,4};
+
         int p1 = countInversions(p1Dept);
 
         int[] recProds = new int[options.length];
 
-        for(int i=0;i<recProds.length;i++){
-            int[] tempDept = hash.get(options[i]).value.getDepRating();
-//            int[] tempDept = {3,2,4,1};   //Replace with hashtable fetch for options[i]
-            recProds[i] = countInversions(tempDept);
-        }
-
-        inversionCounts = recProds;
-        products = options;
+        recProds = inversionCounts(dataset, options);
+     
         int[] absCount = recProds.clone();
 
         for(int i=0;i<recProds.length;i++){
-            absCount[i] = Math.abs(absCount[i]-p1);
-        }
-
-        sort(absCount,0,absCount.length-1);
+        	absCount[i] = Math.abs(absCount[i]-p1);
+        }        
+        
+        sort(absCount, 0, absCount.length-1);
         
         return products;
     }
