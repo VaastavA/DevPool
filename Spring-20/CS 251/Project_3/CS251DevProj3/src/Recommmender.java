@@ -34,7 +34,7 @@ public class Recommender{
     }
     /***************
      * This functions is for the quick sort.
-     * By using this function, change similarity and product name at the same time.
+     * By using this function, swap the similarity and the products at the same time.
      *****************/
     private void swap(int[] arr, int index1, int index2){
         swaps++;
