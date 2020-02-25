@@ -10,17 +10,17 @@ public class Recommender{
 
     int swaps, compares;
     int[] inversionCounts;
-    String products;
+    String[] products;
 
     public Recommender(){
         swaps = 0;
         compares = 0;
     }
-    
+
     public int getComapares() {
         return compares;
     }
-    
+
     public int getswaps() {
         return swaps;
     }
@@ -59,21 +59,22 @@ public class Recommender{
      * @return it is integer array of each option's inversion counts. The order of return should be matched with options.
      */
     public int[] inversionCounts(String dataset, String[] options) {
-    	// TODO
-        
-        return null;    	
+        // TODO
+
+        return null;
     }
-    
+
     /**
      * Get the sequence of recommendation from the dataset by sorting the inverse count.
-     * Compare the similarity of depRating between RecentPurchase's and each option's.  
-     * Use inverse count to get the similarity of two array. 
+     * Compare the similarity of depRating between RecentPurchase's and each option's.
+     * Use inverse count to get the similarity of two array.
      * */
-    public int[] recommend(String dataset, String recentPurchase, String[] options){
+    public String[] recommend(String dataset, String recentPurchase, String[] options) {
         products = options.clone();
-    	// TODO
-    	
+        // TODO
+
         return products;
-    
+    }
+
 
 }

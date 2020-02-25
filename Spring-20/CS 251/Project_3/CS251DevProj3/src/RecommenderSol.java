@@ -19,11 +19,11 @@ public class RecommenderSol {
         swaps = 0;
         compares = 0;
     }
-    
+
     public int getSwaps() {
         return swaps;
     }
-    
+
     public int getComapares() {
         return compares;
     }
@@ -48,38 +48,38 @@ public class RecommenderSol {
     /********************************
      * Do not change above code
      ********************************/
-    
-     public int[] inversionCounts(String dataset, String[] options) {
+
+    public int[] inversionCounts(String dataset, String[] options) {
         HashTable hash = new HashTable();
-        
+
         try {
             hash.load(dataset);
         } catch (Exception e) {
             e.printStackTrace();
-        }       
-        
+        }
+
         int[] recProds = new int[options.length];
-        
+
         for(int i=0;i<recProds.length;i++){
             int[] tempDept = hash.get(options[i]).value.getDepRating();
             recProds[i] = countInversions(tempDept);
         }
-       
+
         return recProds;
-        
+
     }
-    
+
     public String[] recommend(String dataset, String recentPurchase, String[] options){
-        products = options.clone();     
+        products = options.clone();
 
         HashTable hash = new HashTable();
-          
+
         try {
             hash.load(dataset);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         int[] p1Dept = hash.get(recentPurchase).value.getDepRating();
 
         int p1 = countInversions(p1Dept);
@@ -87,15 +87,15 @@ public class RecommenderSol {
         int[] recProds = new int[options.length];
 
         recProds = inversionCounts(dataset, options);
-     
+
         int[] absCount = recProds.clone();
 
         for(int i=0;i<recProds.length;i++){
             absCount[i] = Math.abs(absCount[i]-p1);
-        }        
-        
+        }
+
         sort(absCount, 0, absCount.length-1);
-        
+
         return products;
     }
 
