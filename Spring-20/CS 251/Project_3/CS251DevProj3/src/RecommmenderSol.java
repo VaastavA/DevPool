@@ -171,9 +171,7 @@ public class RecommenderSol {
         }
 
         // swap arr[i+1] and arr[high] (or pivot)
-        int temp = arr[i+1];
-        arr[i+1] = arr[high];
-        arr[high] = temp;
+        swap(arr, i+1, high);
 
         return i+1;
     }
