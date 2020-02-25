@@ -19,10 +19,18 @@ public class RecommenderSol {
         swaps = 0;
         compares = 0;
     }
+    
+    public int getSwaps() {
+        return swaps;
+    }
+    
+    public int getComapares() {
+        return compares;
+    }
 
     private boolean compare(int a ,int b){
         compares++;
-        return a < b;
+        return a <= b;
 
     }
 
@@ -35,11 +43,7 @@ public class RecommenderSol {
         String tempS = products[index1];
         products[index1] = products[index2];
         products[index2] = tempS;
-
     }
-
-
-
 
     /********************************
      * Do not change above code
@@ -55,23 +59,20 @@ public class RecommenderSol {
         }       
         
         int[] recProds = new int[options.length];
-    	
+        
         for(int i=0;i<recProds.length;i++){
             int[] tempDept = hash.get(options[i]).value.getDepRating();
-//            int[] tempDept = {3,2,4,1};   //Replace with hashtable fetch for options[i]
             recProds[i] = countInversions(tempDept);
         }
-        
+       
         return recProds;
-    	
-    	
+        
     }
     
     public String[] recommend(String dataset, String recentPurchase, String[] options){
-        products = options;    	
-    	// TODO
-        
-    	HashTable hash = new HashTable();
+        products = options.clone();     
+
+        HashTable hash = new HashTable();
           
         try {
             hash.load(dataset);
@@ -90,7 +91,7 @@ public class RecommenderSol {
         int[] absCount = recProds.clone();
 
         for(int i=0;i<recProds.length;i++){
-        	absCount[i] = Math.abs(absCount[i]-p1);
+            absCount[i] = Math.abs(absCount[i]-p1);
         }        
         
         sort(absCount, 0, absCount.length-1);
@@ -100,7 +101,7 @@ public class RecommenderSol {
 
     private int countInversions(int[] arr){
         int count = mergeSortAndCount(arr,0,arr.length-1);
-        System.out.println(count);
+//        System.out.println(count);
         return count;
     }
 
@@ -171,7 +172,8 @@ public class RecommenderSol {
         }
 
         // swap arr[i+1] and arr[high] (or pivot)
-        swap(arr, i+1, high);
+
+        swap(arr,i+1,high);
 
         return i+1;
     }

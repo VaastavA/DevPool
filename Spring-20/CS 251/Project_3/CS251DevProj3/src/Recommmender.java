@@ -29,7 +29,7 @@ public class Recommender{
      **************/
     private boolean compare(int a ,int b){
         compares++;
-        return a < b;
+        return a <= b;
 
     }
     /***************
@@ -70,7 +70,7 @@ public class Recommender{
      * Use inverse count to get the similarity of two array. 
      * */
     public int[] recommend(String dataset, String recentPurchase, String[] options){
-        products = options;
+        products = options.clone();
     	// TODO
     	
         return products;
