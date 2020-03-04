@@ -87,7 +87,7 @@ public class HashTableSol {
         }
 
         size++;
-        if ((1.0*size)/capacity >= 0.75)
+        if ((1.0*size)/capacity >= 1.2)
         {
             resize();
 
