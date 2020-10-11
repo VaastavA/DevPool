@@ -21,7 +21,7 @@ public class Recommender{
         return compares;
     }
 
-    public int getswaps() {
+    public int getSwaps() {
         return swaps;
     }
     /**************
