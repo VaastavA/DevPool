@@ -69,13 +69,14 @@ public class HuffmanCode {
 
     }
 
-    public String compress(String in){
+    public String compress(String in) throws IllegalArgumentException {
 
         char[] input = in.toCharArray();
         StringBuilder output = new StringBuilder();
         // use Huffman code to encode input
         for (int i = 0; i < input.length; i++) {
             String code = encoding.get(input[i]);
+            if(code == null) throw new IllegalArgumentException("Encoding Not Found");
             output.append(code);
         }
 
@@ -99,7 +100,7 @@ public class HuffmanCode {
             i++;
         }
 
-        if(!temp.toString().equals("")) throw new IllegalArgumentException("Cannot Decode given input!");
+        if(!temp.toString().equals("")) throw new IllegalArgumentException("Decoding Not Found!");
 
         return output.toString();
     }
