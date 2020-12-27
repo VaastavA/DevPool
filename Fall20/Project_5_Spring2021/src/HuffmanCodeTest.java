@@ -174,8 +174,30 @@ public class HuffmanCodeTest {
     @Test
     public void testClassMethods() {
 
+        Method getHuffmanTree;
+        Method getEncoding;
+        Method getDecoding;
+
         Method compress;
         Method expand;
+
+        try {
+            getHuffmanTree = HuffmanCode.class.getDeclaredMethod("getHuffmanTree");
+        } catch (NoSuchMethodException e) {
+            Assert.fail("Ensure that HuffmanCode has a method getHuffmanTree that is declared public !");
+        }
+
+        try {
+            getEncoding = HuffmanCode.class.getDeclaredMethod("getEncoding");
+        } catch (NoSuchMethodException e) {
+            Assert.fail("Ensure that HuffmanCode has a method getEncoding that is declared public !");
+        }
+
+        try {
+            getDecoding = HuffmanCode.class.getDeclaredMethod("getDecoding");
+        } catch (NoSuchMethodException e) {
+            Assert.fail("Ensure that HuffmanCode has a method getDecoding that is declared public !");
+        }
 
         try {
             compress = HuffmanCode.class.getDeclaredMethod("compress", String.class);
@@ -188,6 +210,172 @@ public class HuffmanCodeTest {
         } catch (NoSuchMethodException e) {
             Assert.fail("Ensure that HuffmanCode has a method expand that is declared public !");
         }
-        
+
+    }
+
+    private void treeChecker(HuffmanCodeSolution.Node sol, HuffmanCode.Node test) {
+
+        if(sol == null && test == null) return;
+
+        if(sol == null && test != null)
+            Assert.fail(String.format("Huffman Tree does not match!\n" +
+                    "Expected node: Null\n" +
+                    "Actual node: (ch,%s) (freq, %d) (isLeaf, %d))",
+                    test.getCh(), test.getFreq(), test.isLeaf()));
+
+        if(sol != null && test == null)
+            Assert.fail(String.format("Huffman Tree does not match!\n" +
+                    "Expected node: (ch,%s) (freq, %d) (isLeaf, %d))\n" +
+                    "Actual node: Null",
+                    sol.getCh(), sol.getFreq(), sol.isLeaf()));
+
+        boolean ch = (sol.getCh() == test.getCh());
+        boolean freq = (sol.getFreq() == test.getFreq());
+        boolean isLeaf = (sol.isLeaf() == test.isLeaf());
+
+        if(!(ch && freq && isLeaf))
+            Assert.fail(String.format("Huffman Tree does not match!\n" +
+                "Expected node: (ch,%s) (freq, %d) (isLeaf, %d)\n" +
+                "Actual node: (ch,%s) (freq, %d) (isLeaf, %d))",
+                sol.getCh(), sol.getFreq(), sol.isLeaf(),
+                test.getCh(), test.getFreq(), test.isLeaf()));
+
+        treeChecker(sol.getLeft(), test.getLeft());
+        treeChecker(sol.getRight(), test.getRight());
+
+    }
+
+    private void encodingChecker(HashMap<Character, String> sol, HashMap<Character, String> test){
+
+        try{
+            for (Character k : test.keySet())
+            {
+                if (!sol.get(k).equals(test.get(k))) {
+                    Assert.fail(String.format(
+                            "Encoding Map does not match!\n" +
+                            "Expected value %s for key %c\n" +
+                            "Actual value %s for key %c",
+                            sol.get(k), k, test.get(k), k));
+                }
+            }
+        } catch (NullPointerException np) {
+            Assert.fail(
+                    "Encoding Map does not match!\n" +
+                    "Unexpected key found");
+        }
+
+        try {
+            for (Character k : sol.keySet())
+            {
+                if (!test.containsKey(k)) {
+                    Assert.fail(String.format(
+                            "Encoding Map does not match!\n" +
+                            "Expected value %s for key %c\n" +
+                            "Actual value of %c: Not found",
+                            sol.get(k), k, k));
+                }
+            }
+        } catch (NullPointerException np) {
+            Assert.fail(
+                    "Encoding Map does not match\n" +
+                    "Required key not found");
+        }
+
+    }
+
+    private void decodingChecker(HashMap<String, Character> sol, HashMap<String, Character> test){
+
+        try {
+            for (String k : test.keySet()) {
+                if (!sol.get(k).equals(test.get(k))) {
+                    Assert.fail(String.format(
+                            "Decoding Map does not match!\n" +
+                            "Expected value %c for key %s\n" +
+                            "Actual value %c for key %s",
+                            sol.get(k), k, test.get(k), k));
+                }
+            }
+        } catch (NullPointerException np) {
+            Assert.fail(
+                    "Decoding Map does not match!\n" +
+                    "Unexpected key found");
+        }
+
+        try {
+            for (String k : sol.keySet())
+            {
+                if (!test.containsKey(k)) {
+                    Assert.fail(String.format(
+                            "Decoding Map does not match!\n" +
+                            "Expected value %c for key %d\n" +
+                            "Actual value of %d: Not found",
+                            sol.get(k), k, k));
+                }
+            }
+        } catch (NullPointerException np) {
+            Assert.fail(
+                    "Decoding Map does not match\n" +
+                    "Required key not found");
+        }
+    }
+
+    private void tester(String filename, int testCount) {
+
+        Scanner testStream = null;
+        StringBuilder in = new StringBuilder();
+
+
+        try {
+            testStream = new Scanner(new File(filename));
+        } catch (IOException e) {
+            System.out.println("Test File opening failed");
+        }
+
+        while (testStream.hasNext()){ in.append(testStream.next()); }
+
+        HuffmanCodeSolution sol = new HuffmanCodeSolution(in.toString());
+        HuffmanCode test = new HuffmanCode(in.toString());
+
+        treeChecker(sol.getHuffmanTree(), test.getHuffmanTree());
+        encodingChecker(sol.getEncoding(), test.getEncoding());
+        decodingChecker(sol.getDecoding(), test.getDecoding());
+
+        assertEquals("Compressed String does not match !", sol.compress("a"), test.compress("a"));
+
+    }
+
+    @Test
+    public void test_compress_Basic() {
+
+    }
+
+    @Test
+    public void test_compress_1() {
+
+    }
+
+    @Test
+    public void test_compress_2() {
+
+    }
+
+    @Test
+    public void test_compress_3() {
+
+    }
+
+    @Test
+    public void test_compress_4() {
+
+    }
+
+    @Test
+    public void test_compress_5() {
+
+    }
+
+    @Test
+    public void test_compress_fail() {
+
     }
 }

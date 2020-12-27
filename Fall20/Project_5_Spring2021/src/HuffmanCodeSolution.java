@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
-public class HuffmanCode {
+public class HuffmanCodeSolution {
 
     class Node implements Comparable<Node>{
 
@@ -58,7 +58,7 @@ public class HuffmanCode {
     private HashMap<String, Character> decoding;
     private String text;
 
-    public HuffmanCode(String text) {
+    public HuffmanCodeSolution(String text) {
         this.text = text;
         init();
     }
