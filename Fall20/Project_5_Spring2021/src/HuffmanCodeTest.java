@@ -14,6 +14,10 @@ import static org.junit.Assert.assertEquals;
 @FixMethodOrder(MethodSorters.JVM)
 public class HuffmanCodeTest {
 
+    enum TestType {
+        ENCODE, DECODE, BOTH
+    }
+
     @Test
     public void testClassPropertyNode() {
         Constructor<HuffmanCode.Node> constructor = null;
@@ -140,7 +144,7 @@ public class HuffmanCodeTest {
             Assert.fail();
         }
 
-        assertEquals("Ensure that text is of type String !", huffmanTree.getClass(), HuffmanCode.Node.class);
+        assertEquals("Ensure that huffmanTree is of type Node !", huffmanTree.getType(), HuffmanCode.Node.class);
 
         try {
             encoding = HuffmanCode.class.getDeclaredField("encoding");
@@ -149,7 +153,7 @@ public class HuffmanCodeTest {
             Assert.fail();
         }
 
-        assertEquals("Ensure that text is of type String !", encoding.getClass(), HashMap.class);
+        assertEquals("Ensure that encoding is of type HashMap<Character, String> !", encoding.getType(), HashMap.class);
 
         try {
             decoding = HuffmanCode.class.getDeclaredField("decoding");
@@ -158,7 +162,7 @@ public class HuffmanCodeTest {
             Assert.fail();
         }
 
-        assertEquals("Ensure that text is of type String !", decoding.getClass(), HashMap.class);
+        assertEquals("Ensure that text is of type HashMap<String, Character> !", decoding.getType(), HashMap.class);
 
         try {
             text = HuffmanCode.class.getDeclaredField("text");
@@ -167,7 +171,7 @@ public class HuffmanCodeTest {
             Assert.fail();
         }
 
-        assertEquals("Ensure that text is of type String !", text.getClass(), String.class);
+        assertEquals("Ensure that text is of type String !", text.getType(), String.class);
 
     }
 
@@ -319,16 +323,16 @@ public class HuffmanCodeTest {
         }
     }
 
-    private void tester(String filename, int testCount) {
+    private void tester(String filename, int testCount, TestType type) {
 
         Scanner testStream = null;
         StringBuilder in = new StringBuilder();
-
+        Random rand = new Random(42);
 
         try {
-            testStream = new Scanner(new File(filename));
+            testStream = new Scanner(new File("test/"+filename));
         } catch (IOException e) {
-            System.out.println("Test File opening failed");
+            Assert.fail("Test File opening failed");
         }
 
         while (testStream.hasNext()){ in.append(testStream.next()); }
@@ -337,45 +341,113 @@ public class HuffmanCodeTest {
         HuffmanCode test = new HuffmanCode(in.toString());
 
         treeChecker(sol.getHuffmanTree(), test.getHuffmanTree());
-        encodingChecker(sol.getEncoding(), test.getEncoding());
-        decodingChecker(sol.getDecoding(), test.getDecoding());
 
-        assertEquals("Compressed String does not match !", sol.compress("a"), test.compress("a"));
+
+        if(type != TestType.DECODE ) {
+
+            encodingChecker(sol.getEncoding(), test.getEncoding());
+
+            Character[] keys = (Character[]) sol.getEncoding().keySet().toArray(new Character[sol.getEncoding().size()]);
+
+            for(int i = 0; i< testCount; i++) {
+
+                int len = rand.nextInt(testCount)+ 1;
+                StringBuilder inst = new StringBuilder();
+
+                for(int j = 0; j<len; j++) { inst.append(keys[rand.nextInt(keys.length)]); }
+
+                assertEquals("Compressed String does not match !", sol.compress(inst.toString()), test.compress(inst.toString()));
+            }
+        }
+
+        if(type != TestType.ENCODE) {
+
+            decodingChecker(sol.getDecoding(), test.getDecoding());
+
+            String[] keys = (String[]) sol.getDecoding().keySet().toArray(new String[sol.getDecoding().size()]);
+
+            for(int i = 0; i< testCount; i++) {
+                int len = rand.nextInt(testCount) + 1;
+                StringBuilder inst = new StringBuilder();
+
+                for (int j = 0; j < len; j++) { inst.append(keys[rand.nextInt(keys.length)]); }
+
+                assertEquals("Expanded String does not match !", sol.expand(inst.toString()), test.expand(inst.toString()));
+            }
+        }
+
 
     }
 
-    @Test
-    public void test_compress_Basic() {
-
-    }
 
     @Test
     public void test_compress_1() {
-
+        System.out.println("Starting test_compress_1");
+        tester("Basic.txt", 1, TestType.ENCODE);
     }
 
     @Test
     public void test_compress_2() {
+        System.out.println("Starting test_compress_2");
+        tester("Intermediate.txt", 10, TestType.ENCODE);
 
     }
 
     @Test
     public void test_compress_3() {
-
+        System.out.println("Starting test_compress_3");
+        tester("Advanced.txt", 100, TestType.ENCODE);
     }
 
     @Test
     public void test_compress_4() {
-
-    }
-
-    @Test
-    public void test_compress_5() {
-
+        System.out.println("Starting test_compress_4");
+        tester("Silmarillion.txt", 1000, TestType.ENCODE);
     }
 
     @Test
     public void test_compress_fail() {
 
+    }
+
+    @Test
+    public void test_expand_1() {
+        System.out.println("Starting test_expand_1");
+        tester("Basic.txt", 1, TestType.DECODE);
+    }
+
+    @Test
+    public void test_expand_2() {
+        System.out.println("Starting test_expand_2");
+        tester("Intermediate.txt", 10, TestType.DECODE);
+    }
+
+    @Test
+    public void test_expand_3() {
+        System.out.println("Starting test_expand_3");
+        tester("Advanced.txt", 100, TestType.DECODE);
+    }
+
+    @Test
+    public void test_expand_4() {
+        System.out.println("Starting test_expand_4");
+        tester("Silmarillion.txt", 1000, TestType.DECODE);
+    }
+
+    @Test
+    public void test_expand_fail() {
+
+    }
+
+    @Test
+    public void test_combined() {
+        System.out.println("Starting test_combined");
+        tester("Advanced.txt", 1, TestType.BOTH);
+    }
+
+    @Test
+    public void test_fail() {
+        System.out.println("Starting test_fail_1");
+        tester("Silmarillion.txt", 1, TestType.BOTH);
     }
 }

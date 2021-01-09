@@ -3,7 +3,7 @@ import java.util.PriorityQueue;
 
 public class HuffmanCode {
 
-    class Node implements Comparable<Node>{
+    public class Node implements Comparable<Node>{
 
         private final char ch;
         private final int freq;

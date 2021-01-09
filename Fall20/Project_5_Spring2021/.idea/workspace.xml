@@ -48,16 +48,23 @@
     <property name="scala_project_settings_configurable.last_selected_tab_index" value="6" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.scala.settings.ScalaProjectSettingsConfigurable" />
   </component>
-  <component name="RunManager">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.HuffmanCodeTest">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HuffmanCodeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Project_5_Spring2021" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="HuffmanCodeTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -74,6 +81,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.HuffmanCodeTest" />
         <item itemvalue="JUnit.HuffmanCodeTest.test_compress_1" />
       </list>
     </recent_temporary>
@@ -97,7 +105,8 @@
       <workItem from="1608932126555" duration="136000" />
       <workItem from="1608932529099" duration="14000" />
       <workItem from="1608932561027" duration="2196000" />
-      <workItem from="1609036001382" duration="2576000" />
+      <workItem from="1609036001382" duration="2943000" />
+      <workItem from="1610166441203" duration="3187000" />
     </task>
     <servers />
   </component>
