@@ -1,14 +1,32 @@
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+/**
+ * A HuffmanCode implementation class
+ *
+ * <p>Purdue University -- CS25100 -- Spring 2021 -- Huffman Encoding</p>
+ *
+ * @auther Vaastav Arora, arora74@purdue.edu
+ * @version January 7, 2021
+ */
 public class HuffmanCode {
 
+    /**
+     *  Node class representing a huffman tree node
+     */
     public class Node implements Comparable<Node>{
 
         private final char ch;
         private final int freq;
         private final Node left, right;
 
+        /**
+         *
+         * @param ch
+         * @param freq
+         * @param left
+         * @param right
+         */
         public Node(char ch, int freq, Node left, Node right) {
             this.ch    = ch;
             this.freq  = freq;
@@ -16,24 +34,49 @@ public class HuffmanCode {
             this.right = right;
         }
 
+        /**
+         *
+         * @return
+         */
         public char getCh() {
             return ch;
         }
 
+        /**
+         *
+         * @return
+         */
         public int getFreq() {
             return freq;
         }
 
+        /**
+         *
+         * @return
+         */
         public Node getLeft() {
             return left;
         }
 
+        /**
+         *
+         * @return
+         */
         public Node getRight() {
             return right;
         }
 
+        /**
+         *
+         * @return
+         */
         public boolean isLeaf() { return getLeft() == null && getRight() == null;}
 
+        /**
+         *
+         * @param o
+         * @return
+         */
         @Override
         public int compareTo(Node o) {
             return this.freq - o.freq;
@@ -42,14 +85,26 @@ public class HuffmanCode {
 
     private Node huffmanTree;
 
+    /**
+     *
+     * @return
+     */
     public Node getHuffmanTree() {
         return huffmanTree;
     }
 
+    /**
+     *
+     * @return
+     */
     public HashMap<Character, String> getEncoding() {
         return encoding;
     }
 
+    /**
+     *
+     * @return
+     */
     public HashMap<String, Character> getDecoding() {
         return decoding;
     }
@@ -58,12 +113,16 @@ public class HuffmanCode {
     private HashMap<String, Character> decoding;
     private String text;
 
+    /**
+     *
+     * @param text
+     */
     public HuffmanCode(String text) {
         this.text = text;
         init();
     }
 
-    public void init() {
+    private void init() {
         // read the input
         char[] input = this.text.toCharArray();
 
@@ -82,6 +141,12 @@ public class HuffmanCode {
 
     }
 
+    /**
+     *
+     * @param in
+     * @return
+     * @throws IllegalArgumentException
+     */
     public String compress(String in) throws IllegalArgumentException {
 
         char[] input = in.toCharArray();
@@ -96,6 +161,12 @@ public class HuffmanCode {
         return output.toString();
     }
 
+    /**
+     *
+     * @param in
+     * @return
+     * @throws IllegalArgumentException
+     */
     public String expand(String in) throws IllegalArgumentException {
 
         char[] input = in.toCharArray();

@@ -63,7 +63,7 @@ public class HuffmanCodeSolution {
         init();
     }
 
-    public void init() {
+    private void init() {
         // read the input
         char[] input = this.text.toCharArray();
 
