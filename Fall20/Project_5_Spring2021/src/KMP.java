@@ -4,6 +4,7 @@ public class KMP {
 
     private String text;
     private String pattern;
+    private int[] lps;
 
     public KMP(String pattern, String text){
         this.pattern = pattern;
@@ -14,7 +15,7 @@ public class KMP {
         int M = this.pattern.length();
         int N = this.text.length();
 
-        int lps[] = new int[M];
+        lps = new int[M];
         int j = 0;
 
         ArrayList<Integer> ret = new ArrayList<>();
@@ -42,7 +43,7 @@ public class KMP {
         return (Integer[])ret.toArray();
     }
 
-    private void computeLPSArray(String pat, int M, int lps[])
+    public void computeLPSArray(String pat, int M, int lps[])
     {
         int len = 0;
         int i = 1;

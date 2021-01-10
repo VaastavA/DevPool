@@ -21,11 +21,11 @@ public class HuffmanCode {
         private final Node left, right;
 
         /**
-         *
-         * @param ch
-         * @param freq
-         * @param left
-         * @param right
+         * Node class constructor
+         * @param ch character stored at node
+         * @param freq frequency of node
+         * @param left left child node
+         * @param right right child node
          */
         public Node(char ch, int freq, Node left, Node right) {
             this.ch    = ch;
@@ -35,87 +35,88 @@ public class HuffmanCode {
         }
 
         /**
-         *
-         * @return
+         * <b>ch</b> field accessor
+         * @return character stored at node
          */
         public char getCh() {
             return ch;
         }
 
         /**
-         *
-         * @return
+         * <b>freq</b> field accessor
+         * @return frequency of node
          */
         public int getFreq() {
             return freq;
         }
 
         /**
-         *
-         * @return
+         * <b>left</b> field accessor
+         * @return left child node
          */
         public Node getLeft() {
             return left;
         }
 
         /**
-         *
-         * @return
+         * <b>right</b> field accessor
+         * @return right child node
          */
         public Node getRight() {
             return right;
         }
 
         /**
-         *
-         * @return
+         *  Method to check if current node is a leaf node
+         * @return true if current node is leaf node
          */
         public boolean isLeaf() { return getLeft() == null && getRight() == null;}
 
         /**
-         *
-         * @param o
-         * @return
+         * CompareTo method to support comparison between two nodes
+         * @param that node to compare current node against
+         * @return integer comparison value
          */
         @Override
-        public int compareTo(Node o) {
-            return this.freq - o.freq;
+        public int compareTo(Node that) {
+            return this.freq - that.freq;
         }
     }
 
-    private Node huffmanTree;
+    private Node huffmanTree;                       //Root of huffman tree
+    private HashMap<Character, String> encoding;    //Stores Encoding mapping
+    private HashMap<String, Character> decoding;    //Stores Decoding mapping
+    private String text;                            //Stores Input text to process
 
     /**
-     *
-     * @return
+     * <b>huffmanTree</b> field accessor
+     * @return Root of huffman tree
      */
     public Node getHuffmanTree() {
         return huffmanTree;
     }
 
     /**
-     *
-     * @return
+     * <b>encoding</b> field accessor
+     * @return Encoding mapping
      */
     public HashMap<Character, String> getEncoding() {
         return encoding;
     }
 
     /**
-     *
-     * @return
+     * <b>decoding</b> field accessor
+     * @return Decoding mapping
      */
     public HashMap<String, Character> getDecoding() {
         return decoding;
     }
 
-    private HashMap<Character, String> encoding;
-    private HashMap<String, Character> decoding;
-    private String text;
+
 
     /**
-     *
-     * @param text
+     * HuffmanCode constructor. Processes text and build encoding + decoding mapping
+     * @param text Input text to be processed
      */
     public HuffmanCode(String text) {
         this.text = text;
@@ -142,10 +143,10 @@ public class HuffmanCode {
     }
 
     /**
-     *
-     * @param in
-     * @return
-     * @throws IllegalArgumentException
+     * Takes plain input text and encodes it based on encoding mapping
+     * @param in input text
+     * @return encoded string
+     * @throws IllegalArgumentException when encoding does not exist
      */
     public String compress(String in) throws IllegalArgumentException {
 
@@ -162,10 +163,10 @@ public class HuffmanCode {
     }
 
     /**
-     *
-     * @param in
-     * @return
-     * @throws IllegalArgumentException
+     * Takes encoded input text and decodes it based on decoding mapping
+     * @param in input test
+     * @return decoded string
+     * @throws IllegalArgumentException when decoding does not exist
      */
     public String expand(String in) throws IllegalArgumentException {
 

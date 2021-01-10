@@ -11,9 +11,18 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * HuffmanCode testing class
+ *
+ * @author Vaastav Arora
+ * @version January 9, 2021
+ */
 @FixMethodOrder(MethodSorters.JVM)
 public class HuffmanCodeTest {
 
+    /**
+     * Enum describing types of tests
+     */
     enum TestType {
         ENCODE, DECODE, BOTH
     }
@@ -384,12 +393,14 @@ public class HuffmanCodeTest {
     public void test_compress_1() {
         System.out.println("Starting test_compress_1");
         tester("Basic.txt", 1, TestType.ENCODE);
+        System.out.println("Ending test_compress_1");
     }
 
     @Test
     public void test_compress_2() {
         System.out.println("Starting test_compress_2");
         tester("Intermediate.txt", 10, TestType.ENCODE);
+        System.out.println("Ending test_compress_2");
 
     }
 
@@ -397,12 +408,14 @@ public class HuffmanCodeTest {
     public void test_compress_3() {
         System.out.println("Starting test_compress_3");
         tester("Advanced.txt", 100, TestType.ENCODE);
+        System.out.println("Ending test_compress_3");
     }
 
     @Test
     public void test_compress_4() {
         System.out.println("Starting test_compress_4");
         tester("Silmarillion.txt", 1000, TestType.ENCODE);
+        System.out.println("Ending test_compress_4");
     }
 
     @Test
@@ -414,24 +427,28 @@ public class HuffmanCodeTest {
     public void test_expand_1() {
         System.out.println("Starting test_expand_1");
         tester("Basic.txt", 1, TestType.DECODE);
+        System.out.println("Ending test_expand_1");
     }
 
     @Test
     public void test_expand_2() {
         System.out.println("Starting test_expand_2");
         tester("Intermediate.txt", 10, TestType.DECODE);
+        System.out.println("Ending test_expand_2");
     }
 
     @Test
     public void test_expand_3() {
         System.out.println("Starting test_expand_3");
         tester("Advanced.txt", 100, TestType.DECODE);
+        System.out.println("Ending test_expand_3");
     }
 
     @Test
     public void test_expand_4() {
         System.out.println("Starting test_expand_4");
         tester("Silmarillion.txt", 1000, TestType.DECODE);
+        System.out.println("Ending test_expand_4");
     }
 
     @Test
@@ -443,11 +460,14 @@ public class HuffmanCodeTest {
     public void test_combined() {
         System.out.println("Starting test_combined");
         tester("Advanced.txt", 1, TestType.BOTH);
+        System.out.println("Ending test_combined");
     }
 
     @Test
     public void test_fail() {
         System.out.println("Starting test_fail_1");
         tester("Silmarillion.txt", 1, TestType.BOTH);
+        System.out.println("Ending test_fail_1");
+
     }
 }
