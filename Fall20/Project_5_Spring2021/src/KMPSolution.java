@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author Vaastav Arora
  * @version January 9, 2021
  */
-public class KMP {
+public class KMPSolution {
 
     private String text;        //Input Target String
     private String pattern;     //Input Pattern String
@@ -17,7 +17,7 @@ public class KMP {
      * @param pattern Input Pattern String
      * @param text  Input Target String
      */
-    public KMP(String pattern, String text){
+    public KMPSolution(String pattern, String text){
         this.pattern = pattern;
         this.text = text;
         lps = new int[this.pattern.length()];
@@ -84,11 +84,4 @@ public class KMP {
         return (Integer[])ret.toArray();
     }
 
-    /**
-     * <b>lps</b> accessor method
-     * @return
-     */
-    public int[] getLps() {
-        return lps;
-    }
 }

@@ -29,6 +29,7 @@ public class HuffmanCodeTest {
 
     @Test
     public void testClassPropertyNode() {
+
         Constructor<HuffmanCode.Node> constructor = null;
         Field ch = null;
         Field freq = null;
