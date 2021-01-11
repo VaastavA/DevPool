@@ -48,7 +48,7 @@
     <property name="scala_project_settings_configurable.last_selected_tab_index" value="6" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.scala.settings.ScalaProjectSettingsConfigurable" />
   </component>
-  <component name="RunManager" selected="JUnit.HuffmanCodeTest">
+  <component name="RunManager" selected="JUnit.KMPTest">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -81,8 +81,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="KMPTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Project_5_Spring2021" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="KMPTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.KMPTest" />
         <item itemvalue="JUnit.HuffmanCodeTest" />
         <item itemvalue="JUnit.HuffmanCodeTest.test_compress_1" />
       </list>
@@ -109,7 +119,7 @@
       <workItem from="1608932561027" duration="2196000" />
       <workItem from="1609036001382" duration="2943000" />
       <workItem from="1610166441203" duration="4362000" />
-      <workItem from="1610248270573" duration="2806000" />
+      <workItem from="1610248270573" duration="5548000" />
     </task>
     <servers />
   </component>

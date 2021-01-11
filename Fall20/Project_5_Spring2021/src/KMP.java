@@ -81,7 +81,7 @@ public class KMP {
             }
         }
 
-        return (Integer[])ret.toArray();
+        return (Integer[])ret.toArray(new Integer[ret.size()]);
     }
 
     /**
